@@ -130,6 +130,49 @@
   .mode small{ display:block; font-size:11.5px; color:var(--soft); }
   .mode[disabled]{ cursor:default; background:transparent; box-shadow:none; border:1.5px dashed var(--line); }
   .mode[disabled] b{ color:var(--soft); }
+  .mode.wide{ grid-column:1 / -1; display:flex; align-items:center; gap:12px; }
+  .mode.wide .pen-ic{ width:34px; height:34px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    background:var(--c); color:#fff; font-family:var(--hand); font-weight:600; font-size:17px; }
+  .mode.wide .mt{ flex:1; min-width:0; }
+  .mode.wide .wbest{ flex-shrink:0; font-family:var(--hand); font-weight:600; font-size:19px; font-variant-numeric:tabular-nums; }
+  .mode.wide .wbest small{ font-size:11px; }
+  .mode.wide .wbest em{ font-style:normal; font-family:var(--ui); font-size:11.5px; font-weight:400; color:var(--soft); }
+
+  /* --- 記述問題 --- */
+  .wcard{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px 16px 18px;
+    box-shadow:0 5px 0 var(--shadow),0 10px 22px var(--sh2); display:flex; flex-direction:column; gap:6px; }
+  .wl{ font-size:12px; font-weight:700; color:var(--soft); letter-spacing:.04em; }
+  .wl small{ font-weight:400; }
+  .tin{ width:100%; font-family:var(--ui); font-size:16px; line-height:1.7; color:var(--ink); background:var(--paper);
+    border:2px solid var(--line); border-radius:12px; padding:10px 12px; resize:vertical; }
+  .tin:focus{ outline:none; border-color:var(--c, var(--pen)); background:var(--card); }
+  .tin[disabled]{ opacity:1; color:var(--ink); background:var(--card); border-style:dashed; }
+  textarea.tin{ min-height:96px; }
+  textarea.tin.memo{ min-height:80px; font-family:var(--hand); }
+  .ansrow{ display:flex; align-items:center; gap:8px; }
+  .ansrow .tin{ flex:1; min-width:0; }
+  .ansrow .unit{ font-weight:700; flex-shrink:0; }
+  .wmeta{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--soft); }
+  .wcard .btn{ margin-top:8px; }
+  .wcard .gap{ height:6px; }
+  .model{ font-family:var(--hand); font-size:16px; line-height:1.85; background:var(--ok-soft); border-radius:12px; padding:10px 13px; margin:0 0 10px; overflow-wrap:anywhere; }
+  .model .pl{ display:block; font-family:var(--ui); font-size:11px; font-weight:700; color:var(--ok); letter-spacing:.1em; }
+  .pts{ list-style:none; margin:0 0 10px; padding:0; display:flex; flex-direction:column; gap:4px; font-size:13.5px; line-height:1.6; }
+  .pts li{ display:flex; gap:8px; }
+  .pts .ck{ width:18px; flex-shrink:0; text-align:center; font-weight:700; color:var(--soft); }
+  .pts li.hit .ck{ color:var(--ok); }
+  .pts-note{ font-size:11.5px; color:var(--soft); margin:-4px 0 10px; }
+  .fix{ font-size:13px; color:var(--ng); margin:0 0 10px; }
+  .grade{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; }
+  .grade p{ grid-column:1 / -1; margin:0; font-size:13px; font-weight:700; }
+  .gbtn{ border:2px solid var(--line); background:var(--card); border-radius:var(--r-md); padding:9px 4px; cursor:pointer;
+    box-shadow:0 3px 0 var(--shadow); display:flex; flex-direction:column; align-items:center; line-height:1.3; }
+  .gbtn b{ font-family:var(--hand); font-weight:600; font-size:24px; color:var(--pen); }
+  .gbtn small{ font-size:11px; color:var(--soft); }
+  .gbtn:active{ transform:translateY(2px); box-shadow:0 1px 0 var(--shadow); }
+  .gbtn.on{ border-color:var(--pen); background:color-mix(in oklab, var(--pen) 10%, var(--card)); }
+  .exp .hd.mid{ color:var(--ink); }
+  .ritem .you-w{ white-space:pre-wrap; }
 
   .unit{ display:flex; align-items:stretch; background:var(--card); border:1px solid var(--line); border-radius:var(--r-md);
     box-shadow:0 4px 0 var(--shadow),0 6px 14px var(--sh2); overflow:hidden; }
@@ -164,6 +207,7 @@
   .prog i.now{ background:var(--c); }
   .prog i.ok{ background:var(--ok); }
   .prog i.ng{ background:var(--ng); }
+  .prog i.mid{ background:color-mix(in oklab, var(--pen) 50%, var(--card)); }
 
   .qcard{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); padding:18px 18px 20px;
     box-shadow:0 5px 0 var(--shadow),0 10px 22px var(--sh2); margin-bottom:14px; }
@@ -271,6 +315,71 @@
   details .le{ margin:4px 0 0; font-size:13.5px; line-height:1.85; }
   .lfoot{ margin-top:18px; }
 
+
+  /* --- 写真で採点 --- */
+  .photo-card{ display:flex; align-items:center; gap:13px; width:100%; text-align:left; cursor:pointer; margin:-6px 0 20px;
+    background:var(--card); border:1.5px dashed color-mix(in oklab, var(--pen) 45%, var(--line)); border-radius:var(--r-md); padding:12px 14px;
+    box-shadow:0 4px 0 var(--shadow),0 6px 14px var(--sh2); }
+  .photo-card:active{ transform:translateY(2px); box-shadow:0 2px 0 var(--shadow); }
+  .photo-card .tile{ --c:var(--pen); }
+  .photo-card .meta{ flex:1; min-width:0; }
+  .photo-card .meta b{ display:block; font-size:15.5px; }
+  .photo-card .meta small{ display:block; font-size:11.5px; color:var(--soft); line-height:1.5; }
+  .badge{ flex-shrink:0; font-size:12px; font-weight:700; border-radius:999px; padding:3px 10px; background:var(--pen); color:#fff; }
+  .badge.wait{ background:var(--chip); color:var(--soft); }
+
+  .phead{ padding-block:4px 12px; }
+  .phead h2{ margin:0; font-family:var(--hand); font-weight:600; font-size:26px; line-height:1.3; }
+  .phead p{ margin:2px 0 0; font-size:13px; color:var(--soft); }
+  .pgrid{ display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:20px; }
+  .pgrid button{ display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 2px 8px; cursor:pointer;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r-md); box-shadow:0 3px 0 var(--shadow); font-size:12px; font-weight:700; }
+  .pgrid button:active{ transform:translateY(2px); box-shadow:0 1px 0 var(--shadow); }
+  .pgrid .tile{ width:38px; height:38px; font-size:21px; border-radius:11px; }
+  .pcard{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); padding:16px;
+    box-shadow:0 5px 0 var(--shadow),0 10px 22px var(--sh2); margin-bottom:20px; display:flex; flex-direction:column; gap:10px; }
+  .pcard .btn:disabled{ opacity:.45; cursor:default; transform:none; }
+  .pmsg{ margin:0; font-size:13px; line-height:1.7; color:var(--soft); }
+  .pmsg:empty{ display:none; }
+  .pmsg.ng{ color:var(--ng); font-weight:700; }
+  .pmsg.ok{ color:var(--ok); font-weight:700; }
+  .pjob{ display:flex; align-items:stretch; background:var(--card); border:1px solid var(--line); border-radius:var(--r-md);
+    box-shadow:0 3px 0 var(--shadow); overflow:hidden; }
+  .pj-main{ flex:1; min-width:0; display:flex; align-items:center; gap:11px; background:none; border:none; text-align:left; padding:10px 12px; cursor:pointer; }
+  .pj-main[disabled]{ cursor:default; }
+  .pj-main .tile{ width:36px; height:36px; font-size:19px; border-radius:10px; }
+  .pj-main .meta{ flex:1; min-width:0; }
+  .pj-main .meta b{ display:block; font-size:14px; }
+  .pj-main .meta small{ display:block; font-size:11.5px; color:var(--soft); line-height:1.5; }
+  .pj-thumb{ width:40px; height:40px; object-fit:cover; border-radius:8px; flex-shrink:0; border:1px solid var(--line); }
+  .st{ flex-shrink:0; font-size:11.5px; font-weight:700; border-radius:999px; padding:3px 9px; background:var(--chip); color:var(--soft); white-space:nowrap; }
+  .st.run{ background:color-mix(in oklab, var(--c, var(--pen)) 15%, var(--card)); color:var(--ink); }
+  .st.done{ background:var(--pen); color:#fff; font-family:var(--hand); font-size:14px; }
+  .st.err{ background:var(--ng-soft); color:var(--ng); }
+  .pj-del{ flex-shrink:0; border:none; border-left:1px solid var(--line); background:var(--card); color:var(--soft);
+    font-size:11.5px; font-weight:700; padding:0 12px; cursor:pointer; }
+  .pj-del.warn{ color:var(--ng); background:var(--ng-soft); }
+  .setbox{ margin-top:24px; background:var(--card); border:1px solid var(--line); border-radius:var(--r-md); padding:12px 14px; }
+  .setbox summary{ font-size:13px; }
+  .setbox .wl{ display:block; margin-top:10px; }
+  .setbox .tin{ font-size:14px; }
+  .setrow{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .mini.pen{ background:var(--pen); color:#fff; border-color:transparent; }
+  .howto{ margin:0 0 16px; padding-left:1.4em; font-size:13.5px; line-height:1.8; }
+  .howto b{ color:var(--pen); }
+  #nPrev{ width:100%; border-radius:12px; border:1px solid var(--line); }
+  .btns2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .pthumb{ display:block; max-width:100%; max-height:220px; margin:14px auto 0; border-radius:10px; border:1px solid var(--line); }
+  .pnote{ font-size:13px; color:var(--soft); margin:12px 4px 0; }
+  .pnote:empty{ display:none; }
+  .ritem .rd{ font-family:var(--hand); font-size:15px; color:var(--ink); overflow-wrap:anywhere; }
+  .ritem .cmt{ margin:6px 0 0; font-size:13.5px; line-height:1.75; }
+  .ritem .fixed{ font-size:11px; color:var(--soft); font-weight:400; }
+  .fixrow{ display:flex; align-items:center; gap:6px; margin-top:8px; font-size:11.5px; color:var(--soft); }
+  .gmini{ width:34px; height:30px; border:1.5px solid var(--line); background:var(--card); border-radius:9px; cursor:pointer;
+    font-family:var(--hand); font-weight:600; font-size:16px; color:var(--pen); }
+  .gmini.on{ border-color:var(--pen); background:color-mix(in oklab, var(--pen) 10%, var(--card)); }
+
   button:focus-visible, summary:focus-visible{ outline:3px solid var(--c, var(--pen)); outline-offset:2px; }
   .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
   @media (prefers-reduced-motion: reduce){
@@ -282,6 +391,7 @@
 <body>
 <div id="verdict" aria-hidden="true">
   <svg id="vOk" viewBox="0 0 200 200" hidden><path pathLength="1" d="M104 26 C 150 24, 178 60, 176 104 C 174 148, 140 176, 98 176 C 54 176, 24 144, 26 100 C 28 60, 58 30, 110 30"/></svg>
+  <svg id="vMid" viewBox="0 0 200 200" hidden><path pathLength="1" d="M100 30 L 172 160 L 28 160 Z"/></svg>
   <svg id="vNg" viewBox="0 0 200 200" hidden><path pathLength="1" d="M48 46 C 90 90, 120 120, 154 156"/><path pathLength="1" d="M154 44 C 118 82, 88 114, 46 156"/></svg>
 </div>
 <div class="sr" id="live" aria-live="polite"></div>
@@ -298,13 +408,16 @@
     <div class="hero">
       <p class="eyebrow">中学1年 ・ 2学期 中間テスト対策</p>
       <h1>中間テスト<span class="num">500</span></h1>
-      <p class="lead">5教科 × 10単元 × 10問。1回10問で、答えるたびに解説が出ます。</p>
+      <p class="lead">5教科 × 10単元 × 10問の4択。1回10問で、答えるたびに解説が出ます。答えを自分で書く記述問題も各教科5問あります。</p>
     </div>
     <div class="strip">
       <div><b id="hUnits">0</b><small>解いた単元 / 50</small></div>
       <div><b id="hAvg">—</b><small>最高点の平均</small></div>
       <div><b id="hWrong">0</b><small>復習待ちの問題</small></div>
     </div>
+    <button class="photo-card" id="photoCard"><span class="tile">写</span>
+      <span class="meta"><b>写真で採点</b><small>紙に書いた記述問題を写真で送ると、Claude が読み取って採点</small></span>
+      <span class="badge" id="photoBadge" hidden></span></button>
     <div class="sec"><span>教科をえらぶ</span><span>1回＝10問・100点満点</span></div>
     <div class="list" id="subjList"></div>
     <p class="note">テスト範囲は学校や教科書によってちがいます。配られた<b>テスト範囲表</b>と見くらべて、範囲の単元を中心に解いてください。国語は教科書の物語・説明文そのものは出していないので、本文の読み直しもしておきましょう。</p>
@@ -317,6 +430,11 @@
     <div class="modes">
       <button class="mode" id="randomBtn"><b>ランダム10問</b><small>100問の中からシャッフル</small></button>
       <button class="mode" id="reviewBtn"><b>まちがい復習</b><small id="reviewCnt">0問</small></button>
+      <button class="mode wide" id="writeBtn"><span class="pen-ic" aria-hidden="true">書</span>
+        <span class="mt"><b>記述問題 5問</b><small id="writeInfo">答えを自分で書いて、答え合わせ</small></span>
+        <span class="wbest" id="writeBest"><em>未</em></span></button>
+      <button class="mode wide" id="photoBtn"><span class="pen-ic" aria-hidden="true">写</span>
+        <span class="mt"><b>紙に書いて写真で採点</b><small>答案の写真を送ると Claude が採点</small></span></button>
     </div>
     <div class="sec"><span>テスト範囲（単元）</span><span>右の「解説」で一覧</span></div>
     <div class="list" id="unitList"></div>
@@ -337,6 +455,87 @@
     <div class="choices" id="choices"></div>
     <div id="expSlot"></div>
     <p class="tip" id="tip">正しいと思う答えをタップ（キーボードなら 1〜4）</p>
+  </section>
+
+  <!-- ===== 記述問題 ===== -->
+  <section class="screen" id="s-write">
+    <div class="qbar">
+      <div class="pill"><span class="mk" id="wMark">数</span><span>記述問題</span></div>
+      <div class="count"><b id="wNo">1</b> / <span id="wTotal">5</span></div>
+    </div>
+    <div class="prog" id="wProg"></div>
+    <div class="qcard">
+      <div id="wPassage"></div>
+      <div class="qno" id="wLabel">第1問</div>
+      <p class="qtext" id="wText">—</p>
+    </div>
+    <div class="wcard" id="wBox"></div>
+    <div id="wSlot"></div>
+  </section>
+
+  <!-- ===== 写真で採点 ===== -->
+  <section class="screen" id="s-photo">
+    <div class="phead"><h2>写真で採点</h2><p>記述問題を紙に書いて写真を送ると、Claude が読み取って採点します。</p></div>
+    <p class="note" id="pSetupNote" hidden>おとなの設定がまだです。いちばん下の「おとなの設定」を開いて、受付係の URL と合言葉を入れてください。</p>
+    <div class="sec"><span>① 教科をえらんで答案を送る</span></div>
+    <div class="pgrid" id="pSubj"></div>
+    <div class="sec"><span>② まとめて採点する</span></div>
+    <div class="pcard">
+      <button class="btn pen" id="pGrade">まとめて採点する</button>
+      <p class="pmsg" id="pMsg"></p>
+    </div>
+    <div class="sec"><span>送った答案</span><span id="pCount"></span></div>
+    <div class="list" id="pList"></div>
+    <details class="setbox" id="pSet">
+      <summary>おとなの設定（受付係の URL と合言葉）</summary>
+      <p class="pmsg" style="margin-top:8px;">Google Apps Script の受付係の URL と、Code.gs に書いた合言葉を入れます。くわしい手順は <b>apps-script/SETUP.md</b> にあります。</p>
+      <label class="wl" for="gUrl">受付係の URL（…/exec で終わる）</label>
+      <input class="tin" id="gUrl" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec">
+      <label class="wl" for="gKey">合言葉</label>
+      <input class="tin" id="gKey" type="text" autocomplete="off" spellcheck="false" autocapitalize="off">
+      <div class="setrow">
+        <button class="mini pen" id="gSave">保存</button>
+        <button class="mini" id="gTest">つながるか試す</button>
+        <button class="mini" id="gLink">この設定のリンクをコピー</button>
+      </div>
+      <p class="pmsg" id="gMsg" style="margin-top:10px;"></p>
+    </details>
+  </section>
+
+  <!-- ===== 答案を送る ===== -->
+  <section class="screen" id="s-pnew">
+    <div class="shead"><span class="tile" id="nTile">数</span><div><h2 id="nName">数学</h2><p>記述問題を紙に書いて、写真で送る</p></div></div>
+    <ol class="howto">
+      <li>ノートや紙に <b>①〜⑤の番号</b> をつけて、下の問題の答えを書く（数学は式も書いてOK）</li>
+      <li>5問ぜんぶが1枚に入るように、明るいところで写真を撮る</li>
+      <li>「この写真を送る」を押す。採点は「写真で採点」の画面から、まとめて頼む</li>
+    </ol>
+    <div class="list" id="nQs"></div>
+    <div class="pcard" style="margin-top:16px;">
+      <input type="file" id="nCam" accept="image/*" capture="environment" hidden>
+      <input type="file" id="nPick" accept="image/*" hidden>
+      <div class="btns2"><button class="btn primary" id="nCamBtn">カメラで撮る</button><button class="btn sub" id="nPickBtn">写真を選ぶ</button></div>
+      <img id="nPrev" alt="送る答案の写真" hidden>
+      <button class="btn pen" id="nSend" hidden>この写真を送る</button>
+      <p class="pmsg" id="nMsg"></p>
+      <div class="btns" id="nAfter" hidden style="margin-top:0;">
+        <button class="btn pen" id="nToPhoto">まとめて採点の画面へ</button>
+        <button class="btn sub" id="nBack">もどる</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 写真の採点結果 ===== -->
+  <section class="screen" id="s-pres">
+    <div class="paper">
+      <p class="unitname" id="xUnit">—</p>
+      <div class="score" id="xScoreBox"><svg viewBox="0 0 220 110" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M34 20 C 90 2, 196 8, 208 50 C 218 92, 120 108, 58 100 C 10 94, 2 58, 26 32 C 40 18, 70 10, 96 8"/></svg><b id="xScore">0</b><span>点</span></div>
+      <p class="rsub" id="xSub"></p>
+      <img class="pthumb" id="xThumb" alt="送った答案の写真" hidden>
+    </div>
+    <p class="pnote" id="xNote"></p>
+    <div class="sec" style="margin-top:22px;"><span>1問ずつの結果</span><span>採点は「直す」で変えられます</span></div>
+    <div class="review" id="xList" style="margin-top:0;"></div>
   </section>
 
   <!-- ===== 結果 ===== -->
@@ -423,7 +622,7 @@
     if(!st.sound) return;
     try{
       actx = actx || new (window.AudioContext || window.webkitAudioContext)();
-      var notes = ok ? [784, 1047] : [330, 262], t = actx.currentTime;
+      var notes = ok === "mid" ? [587, 587] : ok ? [784, 1047] : [330, 262], t = actx.currentTime;
       notes.forEach(function(f, i){
         var o = actx.createOscillator(), g = actx.createGain();
         o.type = ok ? "triangle" : "sine"; o.frequency.value = f;
@@ -437,8 +636,9 @@
   function paintSound(){ $("soundBtn").textContent = st.sound ? "音 あり" : "音 なし"; $("soundBtn").setAttribute("aria-pressed", st.sound ? "true" : "false"); }
 
   /* ---------- 画面の移動（ホーム=0 / 教科=1 / 出題・結果・一覧=2） ---------- */
-  var LEVEL = { "s-home":0, "s-subj":1, "s-quiz":2, "s-done":2, "s-list":2 };
-  var curScreen = "s-home", depth = 0, useHist = true;
+  var LEVEL = { "s-home":0, "s-subj":1, "s-photo":1, "s-quiz":2, "s-write":2, "s-done":2, "s-list":2, "s-pnew":2, "s-pres":2 };
+  var TITLE = { "s-home":"中1 中間テスト", "s-photo":"写真で採点" };
+  var curScreen = "s-home", depth = 0, useHist = true, stack = ["s-home"];
   var cur = null;   // 選んでいる教科
   var Q = null;     // 出題中のセット
 
@@ -447,17 +647,19 @@
     for(var i = 0; i < secs.length; i++) secs[i].classList.toggle("active", secs[i].id === id);
     curScreen = id;
     $("backBtn").hidden = (id === "s-home");
-    $("barTitle").textContent = id === "s-home" ? "中1 中間テスト" : (cur ? cur.name : "");
-    document.getElementById("app").style.setProperty("--c", cur ? cur.color : "");
+    $("barTitle").textContent = TITLE[id] || (cur ? cur.name : "");
+    document.getElementById("app").style.setProperty("--c", cur && !TITLE[id] ? cur.color : "");
     window.scrollTo(0, 0);
   }
+  // 深くなるときは積む、同じ深さ以下へは一番上を入れかえる
   function go(id){
     var from = LEVEL[curScreen], to = LEVEL[id];
-    if(useHist){
-      try{
-        if(to > from){ history.pushState({ lv:to }, ""); depth++; }
-        else history.replaceState({ lv:to }, "");
-      }catch(e){ useHist = false; }
+    if(to > from){
+      stack.push(id);
+      if(useHist){ try{ history.pushState({ lv:to }, ""); depth++; }catch(e){ useHist = false; } }
+    }else{
+      stack[stack.length - 1] = id;
+      if(useHist){ try{ history.replaceState({ lv:to }, ""); }catch(e){} }
     }
     show(id);
   }
@@ -466,9 +668,13 @@
     stepUp();
   }
   function stepUp(){
-    var lv = LEVEL[curScreen];
-    if(lv === 2){ renderSubj(); show("s-subj"); }
-    else if(lv === 1){ renderHome(); show("s-home"); }
+    if(stack.length < 2) return;
+    stack.pop();
+    var id = stack[stack.length - 1];
+    if(id === "s-home") renderHome();
+    else if(id === "s-subj") renderSubj();
+    else if(id === "s-photo") renderPhoto();
+    show(id);
   }
   window.addEventListener("popstate", function(){
     if(depth > 0) depth--;
@@ -496,6 +702,7 @@
     $("hUnits").textContent = units;
     $("hAvg").textContent = units ? Math.round(sum / units) + "点" : "—";
     $("hWrong").textContent = wrongAll;
+    renderPhotoCard();
     resetArm(false);
   }
   $("subjList").addEventListener("click", function(e){
@@ -527,6 +734,13 @@
     var w = wrongOf(s.id).length;
     $("reviewCnt").textContent = w ? w + "問たまっています" : "まちがえた問題はまだありません";
     $("reviewBtn").disabled = !w;
+    var ws = s.write || [], wb = st.best[s.id + ":write"], wp = st.plays[s.id + ":write"];
+    $("writeBtn").hidden = !ws.length;
+    $("writeBtn").style.setProperty("--c", s.color);
+    $("writeInfo").textContent = "答えを自分で書いて答え合わせ" + (wp ? "　" + wp + "回" : "");
+    $("writeBest").innerHTML = wb == null ? "<em>未</em>" : wb + "<small>点</small>";
+    $("photoBtn").hidden = IN_ARTIFACT || !ws.length;
+    $("photoBtn").style.setProperty("--c", s.color);
     $("unitList").innerHTML = s.cats.map(function(c, i){
       var b = st.best[bestKey(s, c)], p = st.plays[bestKey(s, c)] || 0;
       return '<div class="unit" style="--c:' + s.color + '">' +
@@ -546,6 +760,8 @@
     cur.cats.forEach(function(c){ c.qs.forEach(function(_, qi){ all.push({ c:c.id, qi:qi }); }); });
     begin("random", null, shuffle(all).slice(0, 10));
   });
+  $("writeBtn").addEventListener("click", function(){ beginWrite(null); });
+  $("photoBtn").addEventListener("click", function(){ renderPNew(); go("s-pnew"); });
   $("reviewBtn").addEventListener("click", function(){
     var items = wrongOf(cur.id).map(function(k){ var p = k.split(":"); return { c:p[0], qi:+p[1] }; })
       .filter(function(it){ var c = catById(cur, it.c); return c && c.qs[it.qi]; });
@@ -643,7 +859,7 @@
   var vTimer = null;
   function verdict(ok){
     var v = $("verdict");
-    $("vOk").hidden = !ok; $("vNg").hidden = ok;
+    $("vOk").hidden = ok !== true; $("vMid").hidden = ok !== "mid"; $("vNg").hidden = ok !== false;
     clearTimeout(vTimer);
     v.classList.remove("show", "out"); void v.offsetWidth; v.classList.add("show");
     vTimer = setTimeout(function(){
@@ -653,6 +869,14 @@
   }
 
   /* ---------- 結果 ---------- */
+  function showScore(unitText, pts){
+    $("rUnit").textContent = unitText;
+    $("rScore").textContent = pts;
+    $("rMsg").textContent = pts === 100 ? "満点！テスト本番もこの調子で。" : pts >= 80 ? "よくできました。まちがえた所だけ見直そう。" :
+      pts >= 50 ? "あと少し。解説を読んで、もう一度やってみよう。" : "まずは解説をじっくり読もう。2回目はぐっと上がるはず。";
+    var box = $("rScoreBox"), svg = box.querySelector("svg");
+    box.replaceChild(svg.cloneNode(true), svg);   // 赤ペンの丸をもう一度描く
+  }
   function finish(){
     Q.done = true;
     var n = Q.items.length, pts = Math.round(Q.score / n * 100);
@@ -666,11 +890,7 @@
     }else{
       $("rSub").textContent = n + "問中 " + Q.score + "問正解";
     }
-    $("rUnit").textContent = cur.name + "　" + setName();
-    $("rScore").textContent = pts;
-    $("rMsg").textContent = pts === 100 ? "満点！テスト本番もこの調子で。" : pts >= 80 ? "よくできました。まちがえた所だけ見直そう。" :
-      pts >= 50 ? "あと少し。解説を読んで、もう一度やってみよう。" : "まずは解説をじっくり読もう。2回目はぐっと上がるはず。";
-    var box = $("rScoreBox"); var svg = box.querySelector("svg"); var clone = svg.cloneNode(true); box.replaceChild(clone, svg);
+    showScore(cur.name + "　" + setName(), pts);
 
     var wrongN = Q.items.filter(function(x){ return !x.ok; }).length;
     $("retryWrongBtn").hidden = wrongN === 0;
@@ -690,15 +910,196 @@
     if(pts >= 80) beep(true);
   }
   $("retryWrongBtn").addEventListener("click", function(){
+    if(isWrite()){ beginWrite(Q.items.filter(function(x){ return x.g !== 2; }).map(function(x){ return x.wi; })); return; }
     var items = Q.items.filter(function(x){ return !x.ok; }).map(function(x){ return { c:x.c, qi:x.qi }; });
     if(items.length) begin("retry", Q.catId, shuffle(items));
   });
   $("retryBtn").addEventListener("click", function(){
+    if(isWrite()){ beginWrite(null); return; }
     if(Q.mode === "cat") startCat(Q.catId);
     else if(Q.mode === "random") $("randomBtn").click();
     else if(Q.mode === "review") $("reviewBtn").click();
   });
   $("toSubjBtn").addEventListener("click", up);
+
+  /* ---------- 記述問題 ---------- */
+  function isWrite(){ return Q && (Q.mode === "write" || Q.mode === "write-retry"); }
+  function nfkc(t){ return String(t || "").normalize("NFKC"); }
+  // 数・式の答えをそろえる：全角→半角、空白・単位・「x=」・外側のかっこを取る
+  function normNum(t, unit){
+    var s = nfkc(t).toLowerCase().replace(/\s+/g, "").replace(/^(答え?|こたえ)[:：]?/, "").replace(/[。.]$/, "");
+    if(unit){ var u = nfkc(unit).toLowerCase(); if(s.slice(-u.length) === u) s = s.slice(0, -u.length); }
+    s = s.replace(/[ぁ-んァ-ヶー一-龠々]+$/, "");
+    s = s.replace(/[−–—ー‐]/g, "-").replace(/[×*・]/g, "");
+    s = s.replace(/^[a-z]=(?=-?[\d.]+$)/, "");
+    if(/^\(.*\)$/.test(s)) s = s.slice(1, -1);
+    return s;
+  }
+  // 英文をそろえる：小文字、短縮形をほどく、記号を取る
+  var CONTR = [[/\bdoesn't\b/g, "does not"], [/\bdon't\b/g, "do not"], [/\bisn't\b/g, "is not"], [/\baren't\b/g, "are not"],
+    [/\bcan't\b/g, "cannot"], [/\bcan not\b/g, "cannot"], [/\bi'm\b/g, "i am"], [/\byou're\b/g, "you are"], [/\bwe're\b/g, "we are"],
+    [/\bthey're\b/g, "they are"], [/\b(he|she|it|what|that|who|where)'s\b/g, "$1 is"]];
+  function normEn(t){
+    var s = nfkc(t).replace(/[‘’`]/g, "'").toLowerCase();
+    CONTR.forEach(function(r){ s = s.replace(r[0], r[1]); });
+    return s.replace(/[.,!?"]/g, " ").replace(/\s+/g, " ").trim();
+  }
+  // 文は合っているときの、書き方のミス（大文字・ピリオドなど）
+  function enIssues(ans, ref){
+    var a = nfkc(ans).trim(), out = [], end = ref.trim().slice(-1);
+    if(!/^[A-Z]/.test(a)) out.push("文の最初は大文字で書き始める");
+    if(a.slice(-1) !== end) out.push("文の最後に「" + end + "」をつける");
+    if(/(^|\s)i(\s|'|$)/.test(a)) out.push("「I（私は）」はいつも大文字");
+    ref.split(/\s+/).slice(1).forEach(function(w){
+      w = w.replace(/[^A-Za-z]/g, "");
+      if(/^[A-Z]/.test(w) && w !== "I" && !new RegExp("\\b" + w + "\\b").test(a)) out.push("「" + w + "」は大文字で書き始める");
+    });
+    return out;
+  }
+
+  function beginWrite(list){
+    var ws = cur.write || [];
+    if(!list) list = ws.map(function(_, i){ return i; });
+    if(!list.length) return;
+    Q = { mode:list.length === ws.length ? "write" : "write-retry", i:0,
+      items:list.map(function(wi){ return { wi:wi, ans:"", memo:"", g:null, checked:false }; }) };
+    go("s-write");
+    renderW();
+  }
+  function renderW(){
+    var it = Q.items[Q.i], w = cur.write[it.wi];
+    $("wMark").textContent = cur.mark;
+    $("wNo").textContent = Q.i + 1;
+    $("wTotal").textContent = Q.items.length;
+    $("wProg").innerHTML = Q.items.map(function(x, i){
+      return '<i class="' + (x.g === 2 ? "ok" : x.g === 1 ? "mid" : x.g === 0 ? "ng" : i === Q.i ? "now" : "") + '"></i>';
+    }).join("");
+    $("wPassage").innerHTML = w.p ? '<div class="passage"><span class="pl">本文</span>' + fmt(w.p) + '</div>' : "";
+    $("wLabel").textContent = "第" + (Q.i + 1) + "問　" + (w.t === "num" ? "答えは自動で採点" : w.t === "en" ? "英文で答える" : "書いたら自分で採点");
+    $("wText").innerHTML = fmt(w.q);
+    var h = "";
+    if(w.memo) h += '<label class="wl" for="wMemo">式・考え方 <small>（メモ。採点はしません）</small></label>' +
+      '<textarea class="tin memo" id="wMemo" rows="3" placeholder="方程式や計算をここに書こう"></textarea><div class="gap"></div>';
+    if(w.t === "text"){
+      h += '<label class="wl" for="wAns">答え</label><textarea class="tin" id="wAns" rows="4" placeholder="文で書こう"></textarea>' +
+        '<div class="wmeta"><span>文末の形（〜から。〜こと。）にも気をつけよう</span><span id="wCount">0字</span></div>';
+    }else{
+      h += '<label class="wl" for="wAns">答え</label><div class="ansrow"><input class="tin" id="wAns" type="text" autocomplete="off" spellcheck="false"' +
+        (w.t === "en" ? ' lang="en" autocapitalize="sentences" placeholder="英文で書こう"' : ' autocapitalize="off" placeholder="答えだけ書こう"') + '>' +
+        (w.unit ? '<span class="unit">' + esc(w.unit) + '</span>' : '') + '</div>';
+    }
+    h += '<button class="btn primary" id="wCheck">答え合わせ</button>';
+    $("wBox").innerHTML = h;
+    $("wSlot").innerHTML = "";
+    var ans = $("wAns");
+    ans.addEventListener("input", function(){ var c = $("wCount"); if(c) c.textContent = ans.value.replace(/\s/g, "").length + "字"; });
+    ans.addEventListener("keydown", function(e){
+      if(e.key === "Enter" && ans.tagName === "INPUT" && !e.isComposing && e.keyCode !== 229){ e.preventDefault(); checkW(); }
+    });
+    $("wCheck").addEventListener("click", checkW);
+  }
+  function checkW(){
+    var it = Q.items[Q.i], w = cur.write[it.wi];
+    if(it.checked) return;
+    it.checked = true;
+    it.ans = $("wAns").value.trim();
+    it.memo = w.memo ? $("wMemo").value.trim() : "";
+    $("wAns").disabled = true; if(w.memo) $("wMemo").disabled = true;
+    $("wCheck").hidden = true;
+
+    var auto = null, head = "模範解答とくらべて、自分で採点しよう", extra = "";
+    if(!it.ans){ auto = 0; head = "✕ 空らんでした"; }
+    else if(w.t === "num"){
+      var a = normNum(it.ans, w.unit);
+      auto = w.accept.some(function(x){ return normNum(x, w.unit) === a; }) ? 2 : 0;
+      head = auto ? "◯ 正解！" : "✕ ざんねん";
+    }else if(w.t === "en"){
+      var na = normEn(it.ans), hit = null;
+      w.accept.forEach(function(x){ if(!hit && normEn(x) === na) hit = x; });
+      if(hit){
+        var iss = enIssues(it.ans, hit);
+        auto = iss.length ? 1 : 2;
+        head = iss.length ? "△ おしい！ 文は合っています" : "◯ 正解！";
+        if(iss.length) extra = '<p class="fix">直すところ：' + iss.map(esc).join("／") + '</p>';
+      }else{
+        extra = '<p class="pts-note">模範解答とは一致しませんでした。意味が同じで、文法・つづり・大文字・ピリオドが正しければ◯にしてOK。</p>';
+      }
+    }
+    var pts = "";
+    if(w.points){
+      var an = nfkc(it.ans);
+      pts = '<div class="wl" style="margin-bottom:4px">採点のポイント</div><ul class="pts">' + w.points.map(function(p){
+        var got = !!an && p[1].some(function(k){ return an.indexOf(nfkc(k)) >= 0; });
+        return '<li class="' + (got ? "hit" : "") + '"><span class="ck">' + (got ? "✓" : "・") + '</span><span>' + esc(p[0]) + '</span></li>';
+      }).join("") + '</ul><p class="pts-note">✓ は、その言葉が答えに入っているかを自動で見た目安です。最後は自分で判断しよう。</p>';
+    }
+    var self = auto === null;
+    $("wSlot").innerHTML = '<div class="exp">' +
+      '<div class="hd ' + (auto === 2 ? "ok" : auto === 0 ? "ng" : "mid") + '">' + head + '</div>' + extra +
+      '<div class="model"><span class="pl">模範解答</span>' + fmt(w.model) + '</div>' + pts +
+      '<p class="body">' + fmt(w.e) + '</p>' +
+      (self ? '<div class="grade" id="wGrade"><p>自分の答えは？</p>' +
+        '<button class="gbtn" data-g="2"><b>◯</b><small>できた</small></button>' +
+        '<button class="gbtn" data-g="1"><b>△</b><small>おしい</small></button>' +
+        '<button class="gbtn" data-g="0"><b>✕</b><small>できなかった</small></button></div>' : '') +
+      '<button class="btn primary" id="wNext"' + (self ? " hidden" : "") + '>' + (Q.i === Q.items.length - 1 ? "結果を見る" : "次の問題へ") + '</button>' +
+      '</div>';
+    if(self){
+      $("wGrade").addEventListener("click", function(e){
+        var b = e.target.closest(".gbtn"); if(b) setGrade(+b.getAttribute("data-g"));
+      });
+    }else setGrade(auto);
+    $("wNext").addEventListener("click", nextW);
+    $("live").textContent = head;
+    setTimeout(function(){
+      var ex = $("wSlot").firstChild; if(ex) ex.scrollIntoView({ behavior:"smooth", block:"start" });
+    }, 60);
+  }
+  function setGrade(g){
+    var it = Q.items[Q.i];
+    it.g = g;
+    var bs = document.querySelectorAll("#wGrade .gbtn");
+    for(var i = 0; i < bs.length; i++) bs[i].classList.toggle("on", +bs[i].getAttribute("data-g") === g);
+    $("wProg").children[Q.i].className = g === 2 ? "ok" : g === 1 ? "mid" : "ng";
+    var kind = g === 2 ? true : g === 1 ? "mid" : false;
+    verdict(kind); beep(kind);
+    $("wNext").hidden = false;
+  }
+  function nextW(){
+    if(Q.i < Q.items.length - 1){ Q.i++; renderW(); window.scrollTo(0, 0); }
+    else finishWrite();
+  }
+  function finishWrite(){
+    var n = Q.items.length, sum = 0;
+    Q.items.forEach(function(x){ sum += x.g || 0; });
+    var pts = Math.round(sum / (2 * n) * 100);
+    if(Q.mode === "write"){
+      var k = cur.id + ":write", prev = st.best[k];
+      st.plays[k] = (st.plays[k] || 0) + 1;
+      if(prev == null || pts > prev) st.best[k] = pts;
+      save();
+      $("rSub").textContent = prev == null ? "はじめての記録です（◯＝20点、△＝10点）" : pts > prev ? "自己ベスト更新！（前回までの最高 " + prev + "点）" : "記述問題の最高点は " + st.best[k] + "点";
+    }else{
+      $("rSub").textContent = n + "問のやり直し（◯＝満点、△＝半分）";
+    }
+    showScore(cur.name + "　記述問題", pts);
+    var redo = Q.items.filter(function(x){ return x.g !== 2; }).length;
+    $("retryWrongBtn").hidden = redo === 0;
+    $("retryWrongBtn").textContent = "◯でなかった " + redo + "問だけ もう一度";
+    $("retryBtn").hidden = false;
+    $("retryBtn").textContent = Q.mode === "write" ? "もう一度 記述問題" : "記述問題を最初から";
+    var MK = { 2:"◯", 1:"△", 0:"✕" };
+    $("review").innerHTML = Q.items.map(function(it, i){
+      var w = cur.write[it.wi];
+      return '<div class="ritem"><div class="rh"><span class="mark">' + MK[it.g || 0] + '</span><div>' +
+        '<p class="rq">' + (i + 1) + '. ' + fmt(w.q) + '</p>' +
+        '<p class="ra"><span class="you you-w">あなたの答え：' + (it.ans ? esc(it.ans) : "（空らん）") + '</span><br>' +
+        '<span class="ok">模範解答：' + fmt(w.model) + '</span></p>' +
+        '<p class="re">' + fmt(w.e) + '</p></div></div></div>';
+    }).join("");
+    go("s-done");
+    if(pts >= 80) beep(true);
+  }
 
   /* ---------- 問題と解説の一覧 ---------- */
   var listCat = null;
@@ -724,6 +1125,312 @@
     this.textContent = open ? "ぜんぶ閉じる" : "ぜんぶ開く";
   });
   $("lStart").addEventListener("click", function(){ if(listCat) startCat(listCat); });
+
+  /* ---------- 写真で採点（紙の答案 → Apps Script の受付係 → クラウドの採点係） ---------- */
+  var PKEY = "chu1mid.photo", GKEY = "chu1mid.grader";
+  var IN_ARTIFACT = !!window.claude;   // claude.ai のページの中からは外部と通信できないので使わない
+  function loadJSON(k, d){ try{ var v = JSON.parse(localStorage.getItem(k) || "null"); return v == null ? d : v; }catch(e){ return d; } }
+  function saveJSON(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  var gcfg = loadJSON(GKEY, { url:"", key:"" });
+  var pjobs = loadJSON(PKEY, []);   // [{id, subj, at, status, result, reason, thumb, ov:{番号:g}, counted, seen}]
+  function savePJ(){ saveJSON(PKEY, pjobs); }
+  function gReady(){ return /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(gcfg.url) && !!gcfg.key; }
+  function pjob(id){ for(var i = 0; i < pjobs.length; i++){ if(pjobs[i].id === id) return pjobs[i]; } return null; }
+
+  function api(body){
+    return fetch(gcfg.url, { method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body:JSON.stringify(Object.assign({ key:gcfg.key }, body)) })
+      .then(function(r){ if(!r.ok) throw new Error("http_" + r.status); return r.json(); })
+      .then(function(r){ if(!r.ok && !r.running) throw r; return r; });
+  }
+  var ERRS = {
+    bad_key:"合言葉がちがいます。おとなの設定を確認してください。",
+    routine_not_set:"受付係にルーティンの URL とトークンが入っていません（Code.gs の上の3行）。",
+    limit:"今日の採点回数の上限に達しました。あしたもう一度「まとめて採点する」を押してね。",
+    fire_failed:"採点係（ルーティン）を起動できませんでした。おとなに見てもらってください。",
+    bad_image:"写真を読みこめませんでした。別の写真でためしてね。",
+    image_too_large:"写真が大きすぎます。",
+    grading:"採点中の答案は消せません。"
+  };
+  function errText(e){
+    var c = String((e && (e.error || e.message)) || e || "");
+    if(ERRS[c]) return ERRS[c] + (c === "fire_failed" && e.code ? "（" + e.code + "）" : "");
+    if(/fetch|network|http_|Load failed/i.test(c)) return "受付係につながりませんでした。電波と、おとなの設定の URL を確認してください。";
+    return "うまくいきませんでした：" + c;
+  }
+  function msg(el, text, kind){ el.textContent = text || ""; el.className = "pmsg" + (kind ? " " + kind : ""); }
+  // 問題文の [[分子|分母]] を「分子/分母」にして、採点係に渡す
+  function flat(t){
+    return String(t || "").replace(/\[\[([^|\]]+)\|([^\]]+)\]\]/g, function(_, a, b){
+      var wrap = function(t){ return /[+\-−×÷ ]/.test(t) ? "(" + t + ")" : t; };
+      return wrap(a) + "/" + wrap(b);
+    });
+  }
+  function shrink(file, max, q){
+    return new Promise(function(res, rej){
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function(){
+        var r = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+        var c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(img.naturalWidth * r)); c.height = Math.max(1, Math.round(img.naturalHeight * r));
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        res(c.toDataURL("image/jpeg", q));
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); rej({ error:"bad_image" }); };
+      img.src = url;
+    });
+  }
+  function when(t){ var d = new Date(t); return (d.getMonth() + 1) + "/" + d.getDate() + " " + d.getHours() + ":" + ("0" + d.getMinutes()).slice(-2); }
+  function effG(j, no){
+    if(j.ov && j.ov[no] != null) return j.ov[no];
+    var its = (j.result && j.result.items) || [];
+    for(var i = 0; i < its.length; i++){ if(its[i].no === no) return its[i].g; }
+    return 0;
+  }
+  function jobScore(j){
+    var s = subjById(j.subj), n = (s && s.write ? s.write.length : 0) || 5, sum = 0;
+    for(var no = 1; no <= n; no++) sum += effG(j, no);
+    return Math.round(sum / (2 * n) * 100);
+  }
+  function keepBest(j){
+    var k = j.subj + ":write", pts = jobScore(j);
+    if(!j.counted){ j.counted = true; st.plays[k] = (st.plays[k] || 0) + 1; }
+    if(st.best[k] == null || pts > st.best[k]) st.best[k] = pts;
+    save();
+  }
+  var STALE = 20 * 60000, runningSince = null;
+  function stuck(){ return runningSince && Date.now() - runningSince > STALE && pjobs.some(function(j){ return j.status === "grading"; }); }
+
+  // 採点中の答案があるあいだ、15秒ごとに結果を見に行く
+  var pollTimer = null, busy = false;
+  function schedulePoll(){
+    clearTimeout(pollTimer);
+    if(gReady() && (curScreen === "s-photo" || curScreen === "s-pres") && pjobs.some(function(j){ return j.status === "grading"; }))
+      pollTimer = setTimeout(refresh, 15000);
+  }
+  function refresh(){
+    var ids = pjobs.filter(function(j){ return j.status === "pending" || j.status === "grading"; }).map(function(j){ return j.id; });
+    if(!gReady() || !ids.length || busy){ schedulePoll(); return Promise.resolve(); }
+    busy = true;
+    return api({ action:"status", ids:ids }).then(function(r){
+      r.jobs.forEach(function(s){
+        var j = pjob(s.id); if(!j) return;
+        if(s.status === "gone"){ pjobs.splice(pjobs.indexOf(j), 1); return; }
+        j.status = s.status;
+        if(s.result) j.result = s.result;
+        if(s.reason) j.reason = s.reason;
+        if(j.status === "done" && j.result && !j.counted) keepBest(j);
+      });
+      runningSince = r.running ? (r.since || runningSince) : null;
+      savePJ();
+      if(curScreen === "s-photo") renderPhoto();
+    }).catch(function(e){
+      if(curScreen === "s-photo") msg($("pMsg"), errText(e), "ng");
+    }).then(function(){ busy = false; schedulePoll(); });
+  }
+
+  /* 写真で採点の画面 */
+  function renderPhotoCard(){
+    var card = $("photoCard");
+    card.hidden = IN_ARTIFACT;
+    var fresh = pjobs.filter(function(j){ return j.status === "done" && !j.seen; }).length;
+    var run = pjobs.filter(function(j){ return j.status === "grading"; }).length;
+    var wait = pjobs.filter(function(j){ return j.status === "pending"; }).length;
+    var b = $("photoBadge");
+    b.hidden = !(fresh || run || wait);
+    b.className = "badge" + (fresh ? "" : " wait");
+    b.textContent = fresh ? "結果 " + fresh + "件" : run ? "採点中" : "採点待ち " + wait;
+  }
+  function renderPhoto(){
+    $("pSetupNote").hidden = gReady();
+    $("pSubj").innerHTML = SUBJ.filter(function(s){ return s.write && s.write.length; }).map(function(s){
+      return '<button data-pnew="' + s.id + '"><span class="tile" style="--c:' + s.color + '">' + esc(s.mark) + '</span>' + esc(s.name) + '</button>';
+    }).join("");
+    var wait = pjobs.filter(function(j){ return j.status === "pending"; }).length;
+    var run = pjobs.filter(function(j){ return j.status === "grading"; }).length;
+    var btn = $("pGrade");
+    btn.textContent = wait ? "まとめて採点する（" + wait + "枚）" : stuck() ? "採点をやり直す" : "まとめて採点する";
+    btn.disabled = !gReady() || busy || !(wait || stuck());
+    if(!$("pMsg").classList.contains("ng")){
+      msg($("pMsg"), run ? (stuck() ? "採点に時間がかかっています。うまくいかなかったかもしれません。「採点をやり直す」を押すと、もう一度頼みます。"
+        : run + "枚を採点中です。2〜5分ほどで結果が出ます（この画面を閉じても大丈夫）。")
+        : wait ? "送った答案がたまったら、ここを押して一度に採点します（1日の採点回数に上限があるため）。" : "");
+    }
+    $("pCount").textContent = pjobs.length ? pjobs.length + "枚" : "";
+    $("pList").innerHTML = pjobs.length ? pjobs.map(function(j){
+      var s = subjById(j.subj) || { name:"?", mark:"?", color:"#888" };
+      var stt = j.status === "done" ? '<span class="st done">' + jobScore(j) + '点</span>'
+        : j.status === "grading" ? '<span class="st run">採点中…</span>'
+        : j.status === "error" ? '<span class="st err">採点できず</span>'
+        : '<span class="st">採点待ち</span>';
+      var sub = when(j.at) + (j.status === "error" && j.reason ? "・" + j.reason : j.status === "done" && !j.seen ? "・新しい結果" : "");
+      return '<div class="pjob" style="--c:' + s.color + '">' +
+        '<button class="pj-main" data-open="' + j.id + '"' + (j.status === "done" ? "" : " disabled") + '>' +
+        (j.thumb ? '<img class="pj-thumb" src="' + j.thumb + '" alt="">' : '<span class="tile" style="--c:' + s.color + '">' + esc(s.mark) + '</span>') +
+        '<span class="meta"><b>' + esc(s.name) + '　記述問題</b><small>' + esc(sub) + '</small></span>' + stt + '</button>' +
+        (j.status === "grading" ? "" : '<button class="pj-del" data-del="' + j.id + '">消す</button>') + '</div>';
+    }).join("") : '<p class="pmsg">まだ送った答案はありません。</p>';
+    $("gUrl").value = gcfg.url; $("gKey").value = gcfg.key;
+    renderPhotoCard();
+    schedulePoll();
+  }
+  $("photoCard").addEventListener("click", function(){ renderPhoto(); go("s-photo"); refresh(); });
+  $("pSubj").addEventListener("click", function(e){
+    var b = e.target.closest("[data-pnew]"); if(!b) return;
+    cur = subjById(b.getAttribute("data-pnew")); renderPNew(); go("s-pnew");
+  });
+  $("pList").addEventListener("click", function(e){
+    var o = e.target.closest("[data-open]"), d = e.target.closest("[data-del]");
+    if(o){ var j = pjob(o.getAttribute("data-open")); if(j && j.status === "done"){ presId = j.id; cur = subjById(j.subj); renderPres(); go("s-pres"); } }
+    else if(d){
+      if(!d.classList.contains("warn")){ d.classList.add("warn"); d.textContent = "本当に？"; setTimeout(function(){ if(d.isConnected){ d.classList.remove("warn"); d.textContent = "消す"; } }, 3500); return; }
+      var id = d.getAttribute("data-del");
+      d.disabled = true;
+      api({ action:"remove", id:id })
+        .then(function(){ var j = pjob(id); if(j) pjobs.splice(pjobs.indexOf(j), 1); savePJ(); renderPhoto(); })
+        .catch(function(e){ msg($("pMsg"), errText(e), "ng"); renderPhoto(); });
+    }
+  });
+  $("pGrade").addEventListener("click", function(){
+    var btn = this;
+    btn.disabled = true; busy = true;
+    msg($("pMsg"), "採点係を呼んでいます…");
+    api({ action:"grade", self:gcfg.url }).then(function(r){
+      if(r.fired){
+        pjobs.forEach(function(j){ if(j.status === "pending") j.status = "grading"; });
+        runningSince = Date.now(); savePJ();
+        msg($("pMsg"), r.count + "枚の採点を始めました。2〜5分ほどで結果が出ます（この画面を閉じても大丈夫）。", "ok");
+      }else if(r.running){ runningSince = r.since || runningSince; msg($("pMsg"), "いま採点中です。終わってから、もう一度押してね。"); }
+      else msg($("pMsg"), "採点待ちの答案がありません。");
+    }).catch(function(e){ msg($("pMsg"), errText(e), "ng"); })
+      .then(function(){ busy = false; renderPhoto(); return refresh(); });
+  });
+
+  /* おとなの設定 */
+  $("gSave").addEventListener("click", function(){
+    gcfg = { url:$("gUrl").value.trim(), key:$("gKey").value.trim() };
+    saveJSON(GKEY, gcfg);
+    msg($("gMsg"), gReady() ? "保存しました。「つながるか試す」で確認できます。" : "URL の形がちがいます（https://script.google.com/macros/s/…/exec）。", gReady() ? "ok" : "ng");
+    $("pSetupNote").hidden = gReady();
+  });
+  $("gTest").addEventListener("click", function(){
+    if(!gReady()){ msg($("gMsg"), "先に URL と合言葉を保存してください。", "ng"); return; }
+    msg($("gMsg"), "たしかめています…");
+    api({ action:"ping" }).then(function(r){
+      msg($("gMsg"), r.configured ? "つながりました。受付係の準備もできています。" : "つながりました。ただし受付係にルーティンの URL とトークンがまだ入っていません。", r.configured ? "ok" : "ng");
+    }).catch(function(e){ msg($("gMsg"), errText(e), "ng"); });
+  });
+  $("gLink").addEventListener("click", function(){
+    if(!gReady()){ msg($("gMsg"), "先に URL と合言葉を保存してください。", "ng"); return; }
+    var code = btoa(unescape(encodeURIComponent(JSON.stringify({ u:gcfg.url, k:gcfg.key })))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    var link = location.origin + location.pathname + "#g=" + code;
+    var done = function(){ msg($("gMsg"), "リンクをコピーしました。お子さんのスマホでこのリンクを開くと、設定が入ります（合言葉が入っているので、ほかの人には送らないでください）。", "ok"); };
+    try{ navigator.clipboard.writeText(link).then(done, function(){ $("gUrl").value = link; $("gUrl").select(); msg($("gMsg"), "コピーできなかったので、URL 欄にリンクを出しました。長押しでコピーしてください。"); }); }
+    catch(e){ $("gUrl").value = link; $("gUrl").select(); }
+  });
+  // 「この設定のリンク」で開かれたら設定を取りこむ
+  (function(){
+    var m = location.hash.match(/^#g=([A-Za-z0-9_-]+)$/);
+    if(!m) return;
+    try{
+      var o = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))));
+      if(o && o.u && o.k){ gcfg = { url:String(o.u), key:String(o.k) }; saveJSON(GKEY, gcfg); }
+    }catch(e){}
+    try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){}
+  })();
+
+  /* 答案を送る画面 */
+  var nImage = null, nThumb = null;
+  function renderPNew(){
+    var s = cur, prevP = null;
+    $("nTile").textContent = s.mark; $("nTile").style.setProperty("--c", s.color);
+    $("nName").textContent = s.name + "　記述問題";
+    $("nQs").innerHTML = s.write.map(function(w, i){
+      var pass = w.p && w.p !== prevP ? '<div class="passage"><span class="pl">本文</span>' + fmt(w.p) + '</div>' : "";
+      prevP = w.p || null;
+      return '<article class="litem">' + pass + '<div class="qno">' + "①②③④⑤⑥⑦⑧⑨⑩".charAt(i) + '</div><p class="lq">' + fmt(w.q) + '</p>' +
+        (w.unit ? '<p class="pmsg">単位：' + esc(w.unit) + '</p>' : '') + '</article>';
+    }).join("");
+    nImage = nThumb = null;
+    $("nPrev").hidden = true; $("nPrev").removeAttribute("src");
+    $("nSend").hidden = true; $("nSend").disabled = false;
+    $("nAfter").hidden = true;
+    msg($("nMsg"), gReady() ? "" : "おとなの設定がまだなので、送ることはできません（「写真で採点」の画面のいちばん下）。", gReady() ? "" : "ng");
+  }
+  function pickFile(e){
+    var f = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if(!f) return;
+    msg($("nMsg"), "写真を読みこんでいます…");
+    Promise.all([shrink(f, 1600, 0.82), shrink(f, 360, 0.6)]).then(function(r){
+      nImage = r[0]; nThumb = r[1];
+      $("nPrev").src = nImage; $("nPrev").hidden = false;
+      $("nSend").hidden = !gReady(); $("nAfter").hidden = true;
+      msg($("nMsg"), gReady() ? "字がはっきり読めるか確かめてから送ってね。" : "おとなの設定がまだなので、送ることはできません。", gReady() ? "" : "ng");
+    }).catch(function(e2){ msg($("nMsg"), errText(e2), "ng"); });
+  }
+  $("nCam").addEventListener("change", pickFile);
+  $("nPick").addEventListener("change", pickFile);
+  $("nCamBtn").addEventListener("click", function(){ $("nCam").click(); });
+  $("nPickBtn").addEventListener("click", function(){ $("nPick").click(); });
+  $("nSend").addEventListener("click", function(){
+    if(!nImage || !gReady()) return;
+    var s = cur, btn = this;
+    var items = s.write.map(function(w, i){
+      return { no:i + 1, t:w.t, q:flat(w.q), p:w.p ? flat(w.p) : "", model:flat(w.model),
+        points:(w.points || []).map(function(p){ return p[0]; }), accept:w.accept || [], unit:w.unit || "" };
+    });
+    btn.disabled = true;
+    msg($("nMsg"), "送っています…");
+    api({ action:"submit", subj:s.id, items:items, image:nImage }).then(function(r){
+      pjobs.unshift({ id:r.id, subj:s.id, at:Date.now(), status:"pending", thumb:nThumb, ov:{} });
+      pjobs = pjobs.slice(0, 30); savePJ();
+      btn.hidden = true; $("nAfter").hidden = false;
+      msg($("nMsg"), "送りました！ ほかの教科もあれば送ってから、「まとめて採点」を押してね。", "ok");
+    }).catch(function(e){ btn.disabled = false; msg($("nMsg"), errText(e), "ng"); });
+  });
+  $("nToPhoto").addEventListener("click", function(){
+    if(stack[stack.length - 2] === "s-photo") up();
+    else { renderPhoto(); go("s-photo"); refresh(); }
+  });
+  $("nBack").addEventListener("click", up);
+
+  /* 採点結果の画面 */
+  var presId = null;
+  function renderPres(){
+    var j = pjob(presId); if(!j) return;
+    var s = subjById(j.subj), MK = { 2:"◯", 1:"△", 0:"✕" };
+    if(!j.seen){ j.seen = true; savePJ(); }
+    $("xUnit").textContent = s.name + "　記述問題（写真）・" + when(j.at);
+    $("xScore").textContent = jobScore(j);
+    $("xSub").textContent = "◯＝" + Math.round(100 / s.write.length) + "点、△＝その半分";
+    var box = $("xScoreBox"), svg = box.querySelector("svg"); box.replaceChild(svg.cloneNode(true), svg);
+    if(j.thumb){ $("xThumb").src = j.thumb; $("xThumb").hidden = false; } else $("xThumb").hidden = true;
+    $("xNote").textContent = (j.result && j.result.note) || "";
+    var its = (j.result && j.result.items) || [];
+    $("xList").innerHTML = s.write.map(function(w, i){
+      var no = i + 1, x = null;
+      for(var k = 0; k < its.length; k++){ if(its[k].no === no) x = its[k]; }
+      var g = effG(j, no), fixed = j.ov && j.ov[no] != null && (!x || x.g !== j.ov[no]);
+      return '<div class="ritem"><div class="rh"><span class="mark">' + MK[g] + '</span><div style="flex:1;min-width:0;">' +
+        '<p class="rq">' + "①②③④⑤⑥⑦⑧⑨⑩".charAt(i) + ' ' + fmt(w.q) + '</p>' +
+        '<p class="ra">読み取り：<span class="rd">' + (x && x.read ? "「" + esc(x.read) + "」" : "（読み取れませんでした）") + '</span></p>' +
+        (x && x.comment ? '<p class="cmt">' + esc(x.comment) + '</p>' : '') +
+        '<details><summary>模範解答と解説</summary><p class="la"><b>' + fmt(w.model) + '</b></p><p class="le">' + fmt(w.e) + '</p></details>' +
+        '<div class="fixrow"><span>採点を直す' + (fixed ? '<span class="fixed">（直しました）</span>' : '') + '</span>' +
+        [2, 1, 0].map(function(v){ return '<button class="gmini' + (g === v ? " on" : "") + '" data-no="' + no + '" data-g="' + v + '" aria-label="' + MK[v] + 'にする">' + MK[v] + '</button>'; }).join("") +
+        '</div></div></div></div>';
+    }).join("");
+  }
+  $("xList").addEventListener("click", function(e){
+    var b = e.target.closest(".gmini"); if(!b) return;
+    var j = pjob(presId); if(!j) return;
+    j.ov = j.ov || {};
+    j.ov[+b.getAttribute("data-no")] = +b.getAttribute("data-g");
+    savePJ(); keepBest(j);
+    var y = window.scrollY; renderPres(); window.scrollTo(0, y);
+  });
 
   /* ---------- 共通 ---------- */
   $("backBtn").addEventListener("click", up);

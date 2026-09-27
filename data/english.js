@@ -1,7 +1,38 @@
 /* 英語 100問 ─ 中1 2学期中間（be動詞・一般動詞・複数形・代名詞・3単現・can・命令文・疑問詞）
    1問 = [問題文, [正解, 誤答, 誤答, 誤答], 解説]  ※選択肢は表示のときにシャッフルされる */
+(function(){
+var EMMA = "Hi, I'm Emma. I'm from Canada. I live in Nagoya now.\nI have a brother. His name is Leo. He likes soccer. He plays it every Sunday.\nI like music. I can play the piano.";
+
 (window.SUBJECTS = window.SUBJECTS || []).push({
   id: "english", name: "英語", mark: "英", color: "#7C4DD6", desc: "be動詞・一般動詞・3単現・can・疑問詞",
+  /* 記述（英作文）: t=en は accept と同じ文なら自動で◯（大文字・ピリオドもチェック）。ちがう文は自己採点 */
+  write: [
+    { t: "en",
+      q: "次の日本文を英語にしなさい。\n「私は毎日数学を勉強します。」",
+      accept: ["I study math every day.", "I study mathematics every day.", "Every day I study math.", "Every day, I study math."],
+      model: "I study math every day.",
+      e: "主語 I ＋ 一般動詞 study ＋ 目的語 math ＋ every day（毎日）の順。every day は2語で書きます（1語の everyday は「毎日の」という別の言葉）。" },
+    { t: "en",
+      q: "次の日本文を英語にしなさい。\n「私の姉はテニスが好きではありません。」",
+      accept: ["My sister doesn't like tennis.", "My sister does not like tennis.", "My older sister doesn't like tennis.", "My big sister doesn't like tennis."],
+      model: "My sister doesn't like tennis.",
+      e: "主語 My sister は3人称単数なので、否定は doesn't（does not）＋動詞の原形 like。doesn't likes や don't like はまちがいです。" },
+    { t: "en",
+      q: "次の日本文を英語にしなさい。\n「ケンは何時に起きますか。」",
+      accept: ["What time does Ken get up?", "What time does Ken wake up?"],
+      model: "What time does Ken get up?",
+      e: "「何時に」は What time を文の最初に置き、そのあと does ＋主語＋動詞の原形（get up）。疑問文なので最後は「?」。" },
+    { t: "en", p: EMMA,
+      q: "本文を読んで、次の質問に英語で答えなさい。\nWhere does Emma live now?",
+      accept: ["She lives in Nagoya.", "She lives in Nagoya now."],
+      model: "She lives in Nagoya.（now をつけてもよい）",
+      e: "Emma は女性なので She で答えます。主語が3人称単数なので live に s をつけて lives。本文の I live in Nagoya now. の I を She に変えればOK。" },
+    { t: "en", p: EMMA,
+      q: "本文を読んで、次の質問に英語で答えなさい。\nWhat does Leo do every Sunday?",
+      accept: ["He plays soccer.", "He plays soccer every Sunday.", "He plays soccer on Sundays."],
+      model: "He plays soccer.（every Sunday をつけてもよい）",
+      e: "Leo は男の子なので He。本文 He plays it every Sunday. の it は soccer を指すので、soccer に置きかえて答えます。" }
+  ],
   cats: [
   { id: "be", name: "be動詞（am / are / is）", desc: "主語に合わせた be動詞、否定文・疑問文", qs: [
     ["I (　) a student.", ["am", "are", "is", "be"],
@@ -225,3 +256,4 @@
   ]}
   ]
 });
+})();
