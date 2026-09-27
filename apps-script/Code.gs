@@ -16,6 +16,7 @@ const KEEP_DAYS = 30;          // これより古い答案は自動でゴミ箱�
 const STALE_MINUTES = 20;      // 採点中のままこれだけたったら、もう一度「まとめて採点」できる
 const MAX_PAGES = 6;           // 1回に送れる写真の枚数
 const MAX_MAIL_PER_HOUR = 30;  // いたずら対策：1時間に送るメールの上限
+const MAX_SUBMIT_PER_HOUR = 30;// いたずら対策：1時間に受け取る答案の上限
 const SUBJECTS = { japanese: "国語", math: "数学", english: "英語", science: "理科", social: "社会" };
 
 /* ---------- 入口 ---------- */
@@ -27,7 +28,7 @@ function doGet(e) {
     if (p.action === "photo") return out_(graderPhoto_(p));
     return ContentService.createTextOutput("OK: 写真採点の受付係は動いています。");
   } catch (err) {
-    return out_({ ok: false, error: String((err && err.message) || err) });
+    return errOut_(err);
   }
 }
 
@@ -36,7 +37,7 @@ function doPost(e) {
   try { p = JSON.parse(e.postData.contents); } catch (err) { return out_({ ok: false, error: "bad_json" }); }
   try {
     switch (p.action) {
-      case "ping":   checkKey_(p); return out_({ ok: true, configured: routineConfigured_(), mail: true });
+      case "ping":   checkKey_(p); return out_({ ok: true, configured: routineConfigured_(), mail: true, weakKey: String(PAGE_KEY).length < 12 });
       case "submit": return out_(submit_(p));
       case "grade":  return out_(grade_(p));
       case "status": return out_(status_(p));
@@ -47,8 +48,17 @@ function doPost(e) {
     }
     return out_({ ok: false, error: "unknown_action" });
   } catch (err) {
-    return out_({ ok: false, error: String((err && err.message) || err) });
+    return errOut_(err);
   }
+}
+
+// こちらで決めたエラー名だけを返し、それ以外（Google 側の例外の文面など）は外に出さない
+const KNOWN_ERRORS_ = ["bad_key", "bad_subject", "bad_items", "bad_image", "image_too_large", "bad_batch", "bad_job", "bad_page", "too_many"];
+function errOut_(err) {
+  const m = String((err && err.message) || err);
+  if (KNOWN_ERRORS_.indexOf(m) >= 0) return out_({ ok: false, error: m });
+  console.error(err);
+  return out_({ ok: false, error: "server_error" });
 }
 
 function out_(obj) {
@@ -105,7 +115,7 @@ function cleanup_() {
 function submit_(p) {
   checkKey_(p);
   if (!SUBJECTS[p.subj]) throw new Error("bad_subject");
-  if (!Array.isArray(p.items) || !p.items.length || p.items.length > 10) throw new Error("bad_items");
+  if (!Array.isArray(p.items) || !p.items.length || p.items.length > 10 || JSON.stringify(p.items).length > 40000) throw new Error("bad_items");
   const imgs = Array.isArray(p.images) ? p.images : (p.image ? [p.image] : []);
   if (!imgs.length || imgs.length > MAX_PAGES) throw new Error("bad_image");
   let total = 0;
@@ -116,6 +126,7 @@ function submit_(p) {
     return m[1];
   });
   if (total > 20 * 1024 * 1024) throw new Error("image_too_large");
+  if (!underLimit_("submithits", MAX_SUBMIT_PER_HOUR)) throw new Error("too_many");
 
   const id = Utilities.getUuid().replace(/-/g, "").slice(0, 16);
   const folder = folder_();
@@ -308,16 +319,19 @@ function mailTo_() {
   return (typeof MAIL_TO !== "undefined" && MAIL_TO) ? MAIL_TO : Session.getEffectiveUser().getEmail();
 }
 
-function underMailLimit_() {
-  const now = Date.now();
-  let hits;
-  try { hits = JSON.parse(props_().getProperty("mailhits") || "[]"); } catch (e) { hits = []; }
-  hits = hits.filter(function (t) { return now - t < 3600000; });
-  if (hits.length >= MAX_MAIL_PER_HOUR) return false;
-  hits.push(now);
-  props_().setProperty("mailhits", JSON.stringify(hits));
-  return true;
+function underLimit_(name, max) {
+  return withLock_(function () {
+    const now = Date.now();
+    let hits;
+    try { hits = JSON.parse(props_().getProperty(name) || "[]"); } catch (e) { hits = []; }
+    hits = hits.filter(function (t) { return now - t < 3600000; });
+    if (hits.length >= max) return false;
+    hits.push(now);
+    props_().setProperty(name, JSON.stringify(hits));
+    return true;
+  });
 }
+function underMailLimit_() { return underLimit_("mailhits", MAX_MAIL_PER_HOUR); }
 
 // アプリから届いた4択・記述の結果（とテスト送信）
 function mail_(p) {
@@ -328,7 +342,8 @@ function mail_(p) {
     cache.put(k, "1", 21600);
   }
   if (!underMailLimit_()) return { ok: false, error: "mail_limit" };
-  const s = function (v, n) { return String(v == null ? "" : v).slice(0, n || 300); };
+  const s = function (v, n) { return String(v == null ? "" : v).replace(/[
+	]+/g, " ").slice(0, n || 300); };
   const d = {
     kind: s(p.kind, 10), subj: s(p.subj, 10), unit: s(p.unit, 60), at: s(p.at, 40),
     pts: Math.round(Number(p.pts) || 0), score: Math.round(Number(p.score) || 0), total: Math.round(Number(p.total) || 0),
@@ -338,7 +353,7 @@ function mail_(p) {
   };
   if (d.kind === "test") {
     sendMail_("[中1テスト] テスト送信", '<p style="margin:0;">結果メールの設定ができました。これから、解くたびに結果が届きます。</p>', []);
-    return { ok: true, to: maskEmail_(mailTo_()) };
+    return { ok: true };
   }
   let body = head_(d.subj + (d.kind === "quiz" ? "「" + d.unit + "」" : "　記述問題（入力）"), d.pts, d.seconds, d.at,
     d.kind === "quiz" ? d.total + "問中 " + d.score + "問正解" : "");
@@ -409,7 +424,6 @@ function card_(color, title, body) {
 }
 function fmtSec_(s) { s = Math.round(Number(s) || 0); const m = Math.floor(s / 60); return m ? m + "分" + (s % 60) + "秒" : s + "秒"; }
 function esc_(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-function maskEmail_(e) { e = String(e || ""); const at = e.indexOf("@"); return at < 2 ? "（不明）" : e.charAt(0) + "****" + e.slice(at); }
 
 /** エディタから実行する用：メールの許可をとって、テストメールを1通送る */
 function testMail() {

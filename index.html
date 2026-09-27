@@ -10,6 +10,8 @@
 <meta name="theme-color" content="#12171E" media="(prefers-color-scheme: dark)">
 <meta name="description" content="中学1年 2学期中間テスト対策。国語・数学・英語・理科・社会の4択問題 各100問（解説つき）">
 <meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src https://script.google.com https://script.googleusercontent.com; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <link rel="manifest" href="manifest.json">
 <!--ART-->
 <title>中1 中間テスト 500</title>
@@ -431,6 +433,12 @@
       <p class="eyebrow">中学1年 ・ 2学期 中間テスト対策</p>
       <h1>中間テスト<span class="num">500</span></h1>
       <p class="lead">5教科 × 10単元 × 10問の4択。1回10問で、答えるたびに解説が出ます。答えを自分で書く記述問題も各教科5問あります。</p>
+    </div>
+    <div class="note" id="importBox" hidden>
+      <b>写真採点の設定を取りこみますか？</b><br>
+      受付係：<span id="importUrl" style="overflow-wrap:anywhere;"></span><br>
+      <span id="importMsg">おうちの人から送られたリンクのときだけ「取りこむ」を押してください。</span>
+      <div class="setrow"><button class="mini pen" id="importYes">取りこむ</button><button class="mini" id="importNo">取りこまない</button></div>
     </div>
     <div class="strip">
       <div><b id="hUnits">0</b><small>解いた単元 / 50</small></div>
@@ -1193,7 +1201,9 @@
     fire_failed:"採点係（ルーティン）を起動できませんでした。おとなに見てもらってください。",
     bad_image:"写真を読みこめませんでした。別の写真でためしてね。",
     image_too_large:"写真が大きすぎます。",
-    grading:"採点中の答案は消せません。"
+    grading:"採点中の答案は消せません。",
+    too_many:"短い時間に送りすぎです。しばらくしてから送ってね。",
+    server_error:"受付係でエラーが起きました。おとなに見てもらってください（Apps Script の「実行数」に記録があります）。"
   };
   function errText(e){
     var c = String((e && (e.error || e.message)) || e || "");
@@ -1362,7 +1372,9 @@
     msg($("gMsg"), "たしかめています…");
     api({ action:"ping" }).then(function(r){
       msg($("gMsg"), !r.mail ? "つながりました。ただし受付係が古い版です（メールと写真の複数枚に対応していません）。Code.gs を新しくしてください。"
-        : r.configured ? "つながりました。受付係の準備もできています。" : "つながりました。ただし受付係にルーティンの URL とトークンがまだ入っていません。", r.configured && r.mail ? "ok" : "ng");
+        : !r.configured ? "つながりました。ただし受付係にルーティンの URL とトークンがまだ入っていません。"
+        : r.weakKey ? "つながりました。ただし合言葉が短すぎます。settings の PAGE_KEY を、英数字12文字以上のわかりにくいものにしてください。"
+        : "つながりました。受付係の準備もできています。", r.configured && r.mail && !r.weakKey ? "ok" : "ng");
     }).catch(function(e){ msg($("gMsg"), errText(e), "ng"); });
   });
   $("gLink").addEventListener("click", function(){
@@ -1373,15 +1385,22 @@
     try{ navigator.clipboard.writeText(link).then(done, function(){ $("gUrl").value = link; $("gUrl").select(); msg($("gMsg"), "コピーできなかったので、URL 欄にリンクを出しました。長押しでコピーしてください。"); }); }
     catch(e){ $("gUrl").value = link; $("gUrl").select(); }
   });
-  // 「この設定のリンク」で開かれたら設定を取りこむ
+  // 「この設定のリンク」で開かれたら、確認してから取りこむ（知らない人のリンクで送り先を変えられないように）
   (function(){
     var m = location.hash.match(/^#g=([A-Za-z0-9_-]+)$/);
     if(!m) return;
-    try{
-      var o = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))));
-      if(o && o.u && o.k){ gcfg = { url:String(o.u), key:String(o.k), mail:true }; saveJSON(GKEY, gcfg); }
-    }catch(e){}
     try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){}
+    var o = null;
+    try{ o = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/"))))); }catch(e){}
+    if(!o || !o.u || !o.k) return;
+    var next = { url:String(o.u), key:String(o.k), mail:true };
+    if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(next.url)) return;
+    if(next.url === gcfg.url && next.key === gcfg.key) return;
+    $("importUrl").textContent = next.url;
+    if(gcfg.url) $("importMsg").textContent = "今の設定と受付係がちがいます。取りこむと置きかわります。おうちの人から送られたリンクのときだけ「取りこむ」を押してください。";
+    $("importBox").hidden = false;
+    $("importYes").addEventListener("click", function(){ gcfg = next; saveJSON(GKEY, gcfg); $("importBox").hidden = true; renderHome(); });
+    $("importNo").addEventListener("click", function(){ $("importBox").hidden = true; });
   })();
 
   /* 時間の表示 */
@@ -1430,7 +1449,7 @@
     if(!gReady()){ msg($("gMsg"), "先に URL と合言葉を保存してください。", "ng"); return; }
     msg($("gMsg"), "テストメールを送っています…");
     api({ action:"mail", kind:"test" }).then(function(r){
-      msg($("gMsg"), "テストメールを送りました" + (r.to ? "（あて先 " + r.to + "）" : "") + "。届いたか確認してください。", "ok");
+      msg($("gMsg"), "テストメールを送りました。受付係の持ち主の Gmail に届いたか確認してください。", "ok");
     }).catch(function(e){
       msg($("gMsg"), (e && e.error === "unknown_action") ? "受付係が古い版です。Code.gs を新しくしてください。" : errText(e), "ng");
     });
