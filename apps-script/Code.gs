@@ -342,8 +342,7 @@ function mail_(p) {
     cache.put(k, "1", 21600);
   }
   if (!underMailLimit_()) return { ok: false, error: "mail_limit" };
-  const s = function (v, n) { return String(v == null ? "" : v).replace(/[
-	]+/g, " ").slice(0, n || 300); };
+  const s = function (v, n) { return String(v == null ? "" : v).replace(/[\r\n\t]+/g, " ").slice(0, n || 300); };
   const d = {
     kind: s(p.kind, 10), subj: s(p.subj, 10), unit: s(p.unit, 60), at: s(p.at, 40),
     pts: Math.round(Number(p.pts) || 0), score: Math.round(Number(p.score) || 0), total: Math.round(Number(p.total) || 0),
