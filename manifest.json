@@ -1,0 +1,12 @@
+{
+  "name": "中1 中間テスト 500",
+  "short_name": "中間テスト500",
+  "description": "中学1年 2学期中間テスト対策。5教科の4択問題 各100問（解説つき）",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F2F5F9",
+  "theme_color": "#F2F5F9",
+  "lang": "ja"
+}
