@@ -367,7 +367,6 @@
   .mini.pen{ background:var(--pen); color:#fff; border-color:transparent; }
   .howto{ margin:0 0 16px; padding-left:1.4em; font-size:13.5px; line-height:1.8; }
   .howto b{ color:var(--pen); }
-  #nPrev{ width:100%; border-radius:12px; border:1px solid var(--line); }
   .btns2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .pthumb{ display:block; max-width:100%; max-height:220px; margin:14px auto 0; border-radius:10px; border:1px solid var(--line); }
   .pnote{ font-size:13px; color:var(--soft); margin:12px 4px 0; }
@@ -379,6 +378,29 @@
   .gmini{ width:34px; height:30px; border:1.5px solid var(--line); background:var(--card); border-radius:9px; cursor:pointer;
     font-family:var(--hand); font-weight:600; font-size:16px; color:var(--pen); }
   .gmini.on{ border-color:var(--pen); background:color-mix(in oklab, var(--pen) 10%, var(--card)); }
+
+  /* --- 時間・メール・複数枚 --- */
+  .clock{ display:inline-flex; align-items:center; gap:4px; margin-left:10px; color:var(--soft); font-variant-numeric:tabular-nums; }
+  .clock::before{ content:""; width:11px; height:11px; border:2px solid currentColor; border-radius:50%; box-sizing:border-box;
+    background:linear-gradient(currentColor, currentColor) 50% 1px / 2px 4px no-repeat; }
+  .mailstat{ margin:8px 0 0; font-size:12.5px; font-weight:700; color:var(--soft); }
+  .mailstat.ok{ color:var(--ok); } .mailstat.ng{ color:var(--ng); }
+  .swrow{ display:flex; align-items:center; gap:8px; margin-top:14px; font-size:13.5px; font-weight:700; cursor:pointer; }
+  .swrow input{ width:18px; height:18px; accent-color:var(--pen); margin:0; }
+  .watch{ display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--card); border:1px solid var(--line);
+    border-radius:var(--r-md); padding:10px 14px; margin:0 0 16px; box-shadow:0 3px 0 var(--shadow); }
+  .watch .wl{ display:block; }
+  .watch b{ font-family:var(--hand); font-weight:600; font-size:30px; line-height:1.2; font-variant-numeric:tabular-nums; }
+  .watch.run b{ color:var(--pen); }
+  .watch .setrow{ margin:0; flex-wrap:nowrap; }
+  .pages{ display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+  .pages:empty{ display:none; }
+  .pg{ position:relative; min-width:0; }
+  .pg img{ display:block; width:100%; aspect-ratio:3 / 4; object-fit:cover; border-radius:10px; border:1px solid var(--line); cursor:zoom-in; }
+  .pg.big{ grid-column:1 / -1; }
+  .pg.big img{ aspect-ratio:auto; object-fit:contain; cursor:zoom-out; }
+  .pg .pn{ position:absolute; left:6px; top:6px; background:var(--ink); color:var(--card); font-size:11px; font-weight:700; border-radius:999px; padding:1px 8px; }
+  .pg .px{ position:absolute; right:5px; top:5px; width:28px; height:28px; border-radius:50%; border:none; background:rgba(0,0,0,.6); color:#fff; font-size:14px; cursor:pointer; }
 
   button:focus-visible, summary:focus-visible{ outline:3px solid var(--c, var(--pen)); outline-offset:2px; }
   .sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
@@ -444,7 +466,7 @@
   <section class="screen" id="s-quiz">
     <div class="qbar">
       <div class="pill"><span class="mk" id="qMark">数</span><span id="qUnit">—</span></div>
-      <div class="count"><b id="qNo">1</b> / <span id="qTotal">10</span>　◯ <b id="qScore">0</b></div>
+      <div class="count"><b id="qNo">1</b> / <span id="qTotal">10</span>　◯ <b id="qScore">0</b><span class="clock" id="qClock" aria-label="かかっている時間">0:00</span></div>
     </div>
     <div class="prog" id="prog"></div>
     <div class="qcard">
@@ -461,7 +483,7 @@
   <section class="screen" id="s-write">
     <div class="qbar">
       <div class="pill"><span class="mk" id="wMark">数</span><span>記述問題</span></div>
-      <div class="count"><b id="wNo">1</b> / <span id="wTotal">5</span></div>
+      <div class="count"><b id="wNo">1</b> / <span id="wTotal">5</span><span class="clock" id="wClock" aria-label="かかっている時間">0:00</span></div>
     </div>
     <div class="prog" id="wProg"></div>
     <div class="qcard">
@@ -498,6 +520,8 @@
         <button class="mini" id="gTest">つながるか試す</button>
         <button class="mini" id="gLink">この設定のリンクをコピー</button>
       </div>
+      <label class="swrow"><input type="checkbox" id="gMail"><span>結果をメールで送る（4択・記述・写真採点）</span></label>
+      <div class="setrow"><button class="mini" id="gMailTest">テストメールを送る</button></div>
       <p class="pmsg" id="gMsg" style="margin-top:10px;"></p>
     </details>
   </section>
@@ -506,16 +530,21 @@
   <section class="screen" id="s-pnew">
     <div class="shead"><span class="tile" id="nTile">数</span><div><h2 id="nName">数学</h2><p>記述問題を紙に書いて、写真で送る</p></div></div>
     <ol class="howto">
-      <li>ノートや紙に <b>①〜⑤の番号</b> をつけて、下の問題の答えを書く（数学は式も書いてOK）</li>
-      <li>5問ぜんぶが1枚に入るように、明るいところで写真を撮る</li>
-      <li>「この写真を送る」を押す。採点は「写真で採点」の画面から、まとめて頼む</li>
+      <li>解きはじめるときに、下の時計の「スタート」を押す</li>
+      <li>ノートや紙に <b>①〜⑤の番号</b> をつけて、問題の答えを書く（数学は式も書いてOK）</li>
+      <li>明るいところで写真を撮る。何枚に分かれてもOK（6枚まで）</li>
+      <li>ぜんぶ撮ったら「送る」を押す。採点は「写真で採点」の画面から、まとめて頼む</li>
     </ol>
+    <div class="watch" id="nWatch">
+      <div><span class="wl">解いている時間</span><b id="nTime">0:00</b></div>
+      <div class="setrow"><button class="mini pen" id="nStart">スタート</button><button class="mini" id="nReset">リセット</button></div>
+    </div>
     <div class="list" id="nQs"></div>
     <div class="pcard" style="margin-top:16px;">
       <input type="file" id="nCam" accept="image/*" capture="environment" hidden>
-      <input type="file" id="nPick" accept="image/*" hidden>
+      <input type="file" id="nPick" accept="image/*" multiple hidden>
       <div class="btns2"><button class="btn primary" id="nCamBtn">カメラで撮る</button><button class="btn sub" id="nPickBtn">写真を選ぶ</button></div>
-      <img id="nPrev" alt="送る答案の写真" hidden>
+      <div class="pages" id="nPages"></div>
       <button class="btn pen" id="nSend" hidden>この写真を送る</button>
       <p class="pmsg" id="nMsg"></p>
       <div class="btns" id="nAfter" hidden style="margin-top:0;">
@@ -545,6 +574,8 @@
       <div class="score" id="rScoreBox"><svg viewBox="0 0 220 110" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M34 20 C 90 2, 196 8, 208 50 C 218 92, 120 108, 58 100 C 10 94, 2 58, 26 32 C 40 18, 70 10, 96 8"/></svg><b id="rScore">0</b><span>点</span></div>
       <p class="rmsg" id="rMsg"></p>
       <p class="rsub" id="rSub"></p>
+      <p class="rsub" id="rTime"></p>
+      <p class="mailstat" id="rMail" hidden></p>
       <div class="btns">
         <button class="btn pen" id="retryWrongBtn">まちがえた問題だけ もう一度</button>
         <button class="btn primary" id="retryBtn">もう一度</button>
@@ -776,7 +807,7 @@
 
   /* ---------- 出題 ---------- */
   function begin(mode, catId, items){
-    Q = { mode:mode, catId:catId, i:0, score:0, done:false,
+    Q = { mode:mode, catId:catId, i:0, score:0, done:false, t0:Date.now(),
       items:items.map(function(it){ return { c:it.c, qi:it.qi, order:shuffle([0, 1, 2, 3]), chosen:null, ok:null }; }) };
     go("s-quiz");
     renderQ();
@@ -879,6 +910,8 @@
   }
   function finish(){
     Q.done = true;
+    Q.sec = Math.round((Date.now() - Q.t0) / 1000);
+    $("rTime").textContent = "かかった時間 " + fmtSec(Q.sec);
     var n = Q.items.length, pts = Math.round(Q.score / n * 100);
     if(Q.mode === "cat" && n === 10){
       var k = Q.catId && bestKey(cur, catById(cur, Q.catId));
@@ -891,6 +924,11 @@
       $("rSub").textContent = n + "問中 " + Q.score + "問正解";
     }
     showScore(cur.name + "　" + setName(), pts);
+    mailResult({ kind:"quiz", subj:cur.name, unit:setName(), pts:pts, score:Q.score, total:n, seconds:Q.sec,
+      wrong:Q.items.filter(function(x){ return !x.ok; }).map(function(x){
+        var q = catById(cur, x.c).qs[x.qi];
+        return { q:flat(q[0]), picked:flat(q[1][x.order[x.chosen]]), answer:flat(q[1][0]) };
+      }) });
 
     var wrongN = Q.items.filter(function(x){ return !x.ok; }).length;
     $("retryWrongBtn").hidden = wrongN === 0;
@@ -961,7 +999,7 @@
     var ws = cur.write || [];
     if(!list) list = ws.map(function(_, i){ return i; });
     if(!list.length) return;
-    Q = { mode:list.length === ws.length ? "write" : "write-retry", i:0,
+    Q = { mode:list.length === ws.length ? "write" : "write-retry", i:0, t0:Date.now(), done:false,
       items:list.map(function(wi){ return { wi:wi, ans:"", memo:"", g:null, checked:false }; }) };
     go("s-write");
     renderW();
@@ -1070,6 +1108,9 @@
     else finishWrite();
   }
   function finishWrite(){
+    Q.done = true;
+    Q.sec = Math.round((Date.now() - Q.t0) / 1000);
+    $("rTime").textContent = "かかった時間 " + fmtSec(Q.sec);
     var n = Q.items.length, sum = 0;
     Q.items.forEach(function(x){ sum += x.g || 0; });
     var pts = Math.round(sum / (2 * n) * 100);
@@ -1083,6 +1124,8 @@
       $("rSub").textContent = n + "問のやり直し（◯＝満点、△＝半分）";
     }
     showScore(cur.name + "　記述問題", pts);
+    mailResult({ kind:"write", subj:cur.name, unit:Q.mode === "write" ? "記述問題" : "記述問題（やり直し）", pts:pts, seconds:Q.sec,
+      items:Q.items.map(function(x, i){ var w = cur.write[x.wi]; return { no:i + 1, q:flat(w.q), ans:x.ans, model:flat(w.model), g:x.g || 0 }; }) });
     var redo = Q.items.filter(function(x){ return x.g !== 2; }).length;
     $("retryWrongBtn").hidden = redo === 0;
     $("retryWrongBtn").textContent = "◯でなかった " + redo + "問だけ もう一度";
@@ -1264,14 +1307,14 @@
         : j.status === "grading" ? '<span class="st run">採点中…</span>'
         : j.status === "error" ? '<span class="st err">採点できず</span>'
         : '<span class="st">採点待ち</span>';
-      var sub = when(j.at) + (j.status === "error" && j.reason ? "・" + j.reason : j.status === "done" && !j.seen ? "・新しい結果" : "");
+      var sub = when(j.at) + (j.pages > 1 ? "・" + j.pages + "枚" : "") + (j.sec ? "・" + fmtSec(j.sec) : "") + (j.status === "error" && j.reason ? "・" + j.reason : j.status === "done" && !j.seen ? "・新しい結果" : "");
       return '<div class="pjob" style="--c:' + s.color + '">' +
         '<button class="pj-main" data-open="' + j.id + '"' + (j.status === "done" ? "" : " disabled") + '>' +
         (j.thumb ? '<img class="pj-thumb" src="' + j.thumb + '" alt="">' : '<span class="tile" style="--c:' + s.color + '">' + esc(s.mark) + '</span>') +
         '<span class="meta"><b>' + esc(s.name) + '　記述問題</b><small>' + esc(sub) + '</small></span>' + stt + '</button>' +
         (j.status === "grading" ? "" : '<button class="pj-del" data-del="' + j.id + '">消す</button>') + '</div>';
     }).join("") : '<p class="pmsg">まだ送った答案はありません。</p>';
-    $("gUrl").value = gcfg.url; $("gKey").value = gcfg.key;
+    $("gUrl").value = gcfg.url; $("gKey").value = gcfg.key; $("gMail").checked = gcfg.mail !== false;
     renderPhotoCard();
     schedulePoll();
   }
@@ -1309,7 +1352,7 @@
 
   /* おとなの設定 */
   $("gSave").addEventListener("click", function(){
-    gcfg = { url:$("gUrl").value.trim(), key:$("gKey").value.trim() };
+    gcfg = { url:$("gUrl").value.trim(), key:$("gKey").value.trim(), mail:$("gMail").checked };
     saveJSON(GKEY, gcfg);
     msg($("gMsg"), gReady() ? "保存しました。「つながるか試す」で確認できます。" : "URL の形がちがいます（https://script.google.com/macros/s/…/exec）。", gReady() ? "ok" : "ng");
     $("pSetupNote").hidden = gReady();
@@ -1318,7 +1361,8 @@
     if(!gReady()){ msg($("gMsg"), "先に URL と合言葉を保存してください。", "ng"); return; }
     msg($("gMsg"), "たしかめています…");
     api({ action:"ping" }).then(function(r){
-      msg($("gMsg"), r.configured ? "つながりました。受付係の準備もできています。" : "つながりました。ただし受付係にルーティンの URL とトークンがまだ入っていません。", r.configured ? "ok" : "ng");
+      msg($("gMsg"), !r.mail ? "つながりました。ただし受付係が古い版です（メールと写真の複数枚に対応していません）。Code.gs を新しくしてください。"
+        : r.configured ? "つながりました。受付係の準備もできています。" : "つながりました。ただし受付係にルーティンの URL とトークンがまだ入っていません。", r.configured && r.mail ? "ok" : "ng");
     }).catch(function(e){ msg($("gMsg"), errText(e), "ng"); });
   });
   $("gLink").addEventListener("click", function(){
@@ -1335,13 +1379,86 @@
     if(!m) return;
     try{
       var o = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))));
-      if(o && o.u && o.k){ gcfg = { url:String(o.u), key:String(o.k) }; saveJSON(GKEY, gcfg); }
+      if(o && o.u && o.k){ gcfg = { url:String(o.u), key:String(o.k), mail:true }; saveJSON(GKEY, gcfg); }
     }catch(e){}
     try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){}
   })();
 
+  /* 時間の表示 */
+  function fmtSec(sec){ sec = Math.max(0, Math.round(sec || 0)); var m = Math.floor(sec / 60); return m ? m + "分" + (sec % 60) + "秒" : sec + "秒"; }
+  function fmtClock(ms){ var sec = Math.max(0, Math.floor(ms / 1000)); return Math.floor(sec / 60) + ":" + ("0" + (sec % 60)).slice(-2); }
+  setInterval(function(){
+    if(Q && !Q.done && Q.t0){
+      if(curScreen === "s-quiz") $("qClock").textContent = fmtClock(Date.now() - Q.t0);
+      else if(curScreen === "s-write") $("wClock").textContent = fmtClock(Date.now() - Q.t0);
+    }
+    if(curScreen === "s-pnew" && cur) paintWatch();
+  }, 500);
+
+  /* 結果メール（受付係が Gmail で送る）。送れなかった分はためておいて、あとで送る */
+  var MQKEY = "chu1mid.mailq", mailq = loadJSON(MQKEY, []);
+  function mailOn(){ return gReady() && gcfg.mail !== false; }
+  function mailStat(text, kind){
+    var el = $("rMail");
+    el.hidden = !text; el.textContent = text || ""; el.className = "mailstat" + (kind ? " " + kind : "");
+  }
+  function mailResult(d){
+    if(!mailOn()){ mailStat(""); return; }
+    d.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    d.at = new Date().toLocaleString("ja-JP", { month:"numeric", day:"numeric", hour:"numeric", minute:"2-digit" });
+    mailStat("おうちの人に結果を送っています…");
+    api(Object.assign({ action:"mail" }, d)).then(function(){
+      mailStat("おうちの人に結果を送りました", "ok");
+      flushMail();
+    }).catch(function(){
+      mailq.push(d); mailq = mailq.slice(-30); saveJSON(MQKEY, mailq);
+      mailStat("いまは送れなかったので、あとでもう一度送ります", "ng");
+    });
+  }
+  function flushMail(){
+    if(!mailOn() || !mailq.length) return;
+    var list = mailq.slice();
+    mailq = []; saveJSON(MQKEY, mailq);
+    list.reduce(function(chain, d){
+      return chain.then(function(){
+        return api(Object.assign({ action:"mail" }, d)).catch(function(e){ if(!(e && e.error === "bad_key")) mailq.push(d); });
+      });
+    }, Promise.resolve()).then(function(){ saveJSON(MQKEY, mailq); });
+  }
+  $("gMail").addEventListener("change", function(){ gcfg.mail = this.checked; saveJSON(GKEY, gcfg); });
+  $("gMailTest").addEventListener("click", function(){
+    if(!gReady()){ msg($("gMsg"), "先に URL と合言葉を保存してください。", "ng"); return; }
+    msg($("gMsg"), "テストメールを送っています…");
+    api({ action:"mail", kind:"test" }).then(function(r){
+      msg($("gMsg"), "テストメールを送りました" + (r.to ? "（あて先 " + r.to + "）" : "") + "。届いたか確認してください。", "ok");
+    }).catch(function(e){
+      msg($("gMsg"), (e && e.error === "unknown_action") ? "受付係が古い版です。Code.gs を新しくしてください。" : errText(e), "ng");
+    });
+  });
+
   /* 答案を送る画面 */
-  var nImage = null, nThumb = null;
+  var MAXP = 6, pagesBy = {};   // 教科ごとの、まだ送っていない写真（このページを開いているあいだだけ）
+  function pages(){ return pagesBy[cur.id] || (pagesBy[cur.id] = []); }
+
+  // 教科ごとのストップウォッチ（ページを閉じても続きから）
+  var WKEY = "chu1mid.watch", watch = loadJSON(WKEY, {});
+  function wOf(sid){ return watch[sid] || (watch[sid] = { acc:0, since:null }); }
+  function wMs(sid){ var w = wOf(sid); return w.acc + (w.since ? Date.now() - w.since : 0); }
+  function wSave(){ saveJSON(WKEY, watch); }
+  function wPause(sid){ var w = wOf(sid); if(!w.since) return false; w.acc += Date.now() - w.since; w.since = null; wSave(); return true; }
+  function paintWatch(){
+    var w = wOf(cur.id), ms = wMs(cur.id);
+    $("nTime").textContent = fmtClock(ms);
+    $("nWatch").classList.toggle("run", !!w.since);
+    $("nStart").textContent = w.since ? "一時停止" : ms ? "再開" : "スタート";
+  }
+  $("nStart").addEventListener("click", function(){
+    var w = wOf(cur.id);
+    if(w.since){ w.acc += Date.now() - w.since; w.since = null; } else w.since = Date.now();
+    wSave(); paintWatch();
+  });
+  $("nReset").addEventListener("click", function(){ watch[cur.id] = { acc:0, since:null }; wSave(); paintWatch(); });
+
   function renderPNew(){
     var s = cur, prevP = null;
     $("nTile").textContent = s.mark; $("nTile").style.setProperty("--c", s.color);
@@ -1352,42 +1469,75 @@
       return '<article class="litem">' + pass + '<div class="qno">' + "①②③④⑤⑥⑦⑧⑨⑩".charAt(i) + '</div><p class="lq">' + fmt(w.q) + '</p>' +
         (w.unit ? '<p class="pmsg">単位：' + esc(w.unit) + '</p>' : '') + '</article>';
     }).join("");
-    nImage = nThumb = null;
-    $("nPrev").hidden = true; $("nPrev").removeAttribute("src");
-    $("nSend").hidden = true; $("nSend").disabled = false;
+    $("nSend").disabled = false;
     $("nAfter").hidden = true;
+    renderPages(); paintWatch();
     msg($("nMsg"), gReady() ? "" : "おとなの設定がまだなので、送ることはできません（「写真で採点」の画面のいちばん下）。", gReady() ? "" : "ng");
   }
+  function renderPages(){
+    var ps = pages();
+    $("nPages").innerHTML = ps.map(function(p, i){
+      return '<div class="pg"><img src="' + p.data + '" alt="' + (i + 1) + '枚目の答案" data-zoom="' + i + '">' +
+        '<span class="pn">' + (i + 1) + '</span><button class="px" data-rm="' + i + '" aria-label="' + (i + 1) + '枚目を消す">✕</button></div>';
+    }).join("");
+    $("nSend").hidden = !ps.length || !gReady();
+    $("nSend").textContent = ps.length > 1 ? "この " + ps.length + " 枚を送る" : "この写真を送る";
+    $("nCamBtn").textContent = ps.length ? "もう1枚撮る" : "カメラで撮る";
+    $("nPickBtn").textContent = ps.length ? "写真を追加" : "写真を選ぶ";
+    $("nCamBtn").disabled = $("nPickBtn").disabled = ps.length >= MAXP;
+  }
+  $("nPages").addEventListener("click", function(e){
+    var rm = e.target.closest("[data-rm]"), z = e.target.closest("[data-zoom]");
+    if(rm){ pages().splice(+rm.getAttribute("data-rm"), 1); renderPages(); }
+    else if(z){ z.parentNode.classList.toggle("big"); }
+  });
   function pickFile(e){
-    var f = e.target.files && e.target.files[0];
+    var files = Array.prototype.slice.call(e.target.files || []);
     e.target.value = "";
-    if(!f) return;
+    if(!files.length || !cur) return;
+    var sid = cur.id, room = MAXP - pages().length;
+    if(room <= 0){ msg($("nMsg"), "写真は" + MAXP + "枚までです。", "ng"); return; }
+    var over = files.length > room, stopped = wPause(sid);
+    files = files.slice(0, room);
+    paintWatch();
     msg($("nMsg"), "写真を読みこんでいます…");
-    Promise.all([shrink(f, 1600, 0.82), shrink(f, 360, 0.6)]).then(function(r){
-      nImage = r[0]; nThumb = r[1];
-      $("nPrev").src = nImage; $("nPrev").hidden = false;
-      $("nSend").hidden = !gReady(); $("nAfter").hidden = true;
-      msg($("nMsg"), gReady() ? "字がはっきり読めるか確かめてから送ってね。" : "おとなの設定がまだなので、送ることはできません。", gReady() ? "" : "ng");
-    }).catch(function(e2){ msg($("nMsg"), errText(e2), "ng"); });
+    files.reduce(function(chain, f){
+      return chain.then(function(){
+        return Promise.all([shrink(f, 1600, 0.82), shrink(f, 360, 0.6)]).then(function(r){
+          (pagesBy[sid] || (pagesBy[sid] = [])).push({ data:r[0], thumb:r[1] });
+        });
+      });
+    }, Promise.resolve()).then(function(){
+      if(cur && cur.id === sid) renderPages();
+      $("nAfter").hidden = true;
+      msg($("nMsg"), !gReady() ? "おとなの設定がまだなので、送ることはできません。"
+        : over ? "写真は" + MAXP + "枚までなので、入りきらない分は入れていません。"
+        : (stopped ? "時計を止めました。" : "") + "字がはっきり読めるか確かめてね（写真を押すと大きく見られます）。答案がまだ続くなら、もう1枚撮ってね。",
+        !gReady() || over ? "ng" : "");
+    }).catch(function(e2){ if(cur && cur.id === sid) renderPages(); msg($("nMsg"), errText(e2), "ng"); });
   }
   $("nCam").addEventListener("change", pickFile);
   $("nPick").addEventListener("change", pickFile);
   $("nCamBtn").addEventListener("click", function(){ $("nCam").click(); });
   $("nPickBtn").addEventListener("click", function(){ $("nPick").click(); });
   $("nSend").addEventListener("click", function(){
-    if(!nImage || !gReady()) return;
-    var s = cur, btn = this;
+    var ps = pages();
+    if(!ps.length || !gReady()) return;
+    var s = cur, btn = this, sec = Math.round(wMs(s.id) / 1000);
     var items = s.write.map(function(w, i){
       return { no:i + 1, t:w.t, q:flat(w.q), p:w.p ? flat(w.p) : "", model:flat(w.model),
         points:(w.points || []).map(function(p){ return p[0]; }), accept:w.accept || [], unit:w.unit || "" };
     });
     btn.disabled = true;
-    msg($("nMsg"), "送っています…");
-    api({ action:"submit", subj:s.id, items:items, image:nImage }).then(function(r){
-      pjobs.unshift({ id:r.id, subj:s.id, at:Date.now(), status:"pending", thumb:nThumb, ov:{} });
+    msg($("nMsg"), "送っています…（写真 " + ps.length + " 枚）");
+    api({ action:"submit", subj:s.id, items:items, images:ps.map(function(p){ return p.data; }),
+      image:ps.length === 1 ? ps[0].data : undefined, seconds:sec, mail:gcfg.mail !== false }).then(function(r){
+      pjobs.unshift({ id:r.id, subj:s.id, at:Date.now(), status:"pending", thumb:ps[0].thumb, pages:ps.length, sec:sec, ov:{} });
       pjobs = pjobs.slice(0, 30); savePJ();
+      pagesBy[s.id] = []; watch[s.id] = { acc:0, since:null }; wSave();
+      renderPages(); paintWatch();
       btn.hidden = true; $("nAfter").hidden = false;
-      msg($("nMsg"), "送りました！ ほかの教科もあれば送ってから、「まとめて採点」を押してね。", "ok");
+      msg($("nMsg"), "送りました！" + (sec ? "（かかった時間 " + fmtSec(sec) + "）" : "") + " ほかの教科もあれば送ってから、「まとめて採点」を押してね。", "ok");
     }).catch(function(e){ btn.disabled = false; msg($("nMsg"), errText(e), "ng"); });
   });
   $("nToPhoto").addEventListener("click", function(){
@@ -1404,7 +1554,8 @@
     if(!j.seen){ j.seen = true; savePJ(); }
     $("xUnit").textContent = s.name + "　記述問題（写真）・" + when(j.at);
     $("xScore").textContent = jobScore(j);
-    $("xSub").textContent = "◯＝" + Math.round(100 / s.write.length) + "点、△＝その半分";
+    $("xSub").textContent = "◯＝" + Math.round(100 / s.write.length) + "点、△＝その半分" +
+      (j.sec ? "・かかった時間 " + fmtSec(j.sec) : "") + (j.pages > 1 ? "・写真 " + j.pages + "枚" : "");
     var box = $("xScoreBox"), svg = box.querySelector("svg"); box.replaceChild(svg.cloneNode(true), svg);
     if(j.thumb){ $("xThumb").src = j.thumb; $("xThumb").hidden = false; } else $("xThumb").hidden = true;
     $("xNote").textContent = (j.result && j.result.note) || "";
@@ -1443,6 +1594,7 @@
 
   paintSound();
   renderHome();
+  flushMail();
   try{ history.replaceState({ lv:0 }, ""); }catch(e){ useHist = false; }
 })();
 </script>

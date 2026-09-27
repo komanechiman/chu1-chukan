@@ -9,14 +9,14 @@
 ■ 手順
 1. 採点する答案の一覧を取得する。
    curl -sSL "<url>?action=batch&batch=<batch>&token=<token>"
-   返り値の形: {"ok":true,"jobs":[{"id":"…","subj":"math","items":[{"no":1,"t":"num","q":"問題文","p":"本文（ないこともある）","model":"模範解答","points":["採点のポイント",…],"accept":["正解として認める答え",…],"unit":"単位"}, …]}]}
-   ok が false、または jobs が空なら、その内容を書いて終了する。
+   返り値の形: {"ok":true,"jobs":[{"id":"…","subj":"math","pages":2,"items":[{"no":1,"t":"num","q":"問題文","p":"本文（ないこともある）","model":"模範解答","points":["採点のポイント",…],"accept":["正解として認める答え",…],"unit":"単位"}, …]}]}
+   pages は、その答案の写真の枚数（1〜6）。ok が false、または jobs が空なら、その内容を書いて終了する。
 
 2. 各 job について、次の a〜d を順に行う。
-   a. 写真を取得してファイルにする。
-      curl -sSL "<url>?action=photo&batch=<batch>&token=<token>&id=<id>" -o /tmp/<id>.json
-      python3 -c "import json,base64;d=json.load(open('/tmp/<id>.json'));open('/tmp/<id>.jpg','wb').write(base64.b64decode(d['data']))"
-   b. Read ツールで /tmp/<id>.jpg を開いて写真を見る。答案には ①〜⑤（または 1〜5、問1〜問5）の番号がついている。写真が横向きや逆さでも読み取る。
+   a. 写真を1枚ずつ取得してファイルにする（<n> は 1 から pages まで）。
+      curl -sSL "<url>?action=photo&batch=<batch>&token=<token>&id=<id>&page=<n>" -o /tmp/<id>-<n>.json
+      python3 -c "import json,base64;d=json.load(open('/tmp/<id>-<n>.json'));open('/tmp/<id>-<n>.jpg','wb').write(base64.b64decode(d['data']))"
+   b. Read ツールで /tmp/<id>-1.jpg 〜 /tmp/<id>-<pages>.jpg をすべて開いて写真を見る。全部で1人分の答案で、何枚かに分かれて書かれている（例：1枚目に①②、2枚目に③〜⑤）。答案には ①〜⑤（または 1〜5、問1〜問5）の番号がついている。写真が横向きや逆さでも読み取る。同じ番号の答えが2枚に写っているときは、はっきり読めるほうを使う。
    c. items の各問（no の番号）について、写真の中の同じ番号の答えを読み取り、採点する。
       - read：書かれているとおりに文字起こしする（誤字・脱字も直さない）。読めない文字は〔？〕。その番号の答えが見当たらないときは空文字 ""。数学で式と答えの両方が書いてあるときは、最終的な答えがわかるように書く（例「式：150x+90(12−x)=1440　答え：6個」）。
       - g：2＝正解、1＝部分的に正しい、0＝不正解または空欄。
